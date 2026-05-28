@@ -1,0 +1,99 @@
+.sj-bottom-nav {
+  box-sizing: border-box;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  padding: 0 0 calc(-4px + env(safe-area-inset-bottom));
+  color: #18181b;
+  font-family: "PingFang SC", "PingFang TC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.sj-bottom-nav__shell {
+  box-sizing: border-box;
+  width: calc(100% - 48px);
+  max-width: 420px;
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 2px;
+  margin: 0 auto;
+  padding: 9px;
+  padding-bottom: 8px;
+  border: 1px solid #e4e4e7;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 -6px 18px rgba(24, 24, 27, 0.06);
+  pointer-events: auto;
+}
+
+.sj-bottom-nav__item {
+  box-sizing: border-box;
+  position: relative;
+  min-width: 0;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 4px;
+  border-radius: 16px;
+  background: transparent;
+  color: #71717a;
+  line-height: 1;
+}
+
+.sj-bottom-nav__item.is-active {
+  color: #18181b;
+}
+
+.sj-bottom-nav__icon-wrap {
+  position: relative;
+  width: 36px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.sj-bottom-nav__icon {
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  width: 22px;
+  height: 22px;
+  display: block;
+  transition: opacity 160ms ease;
+}
+
+.sj-bottom-nav__icon.is-visible {
+  opacity: 1;
+}
+
+.sj-bottom-nav__icon.is-hidden {
+  opacity: 0;
+}
+
+.sj-bottom-nav__label {
+  max-width: 100%;
+  overflow: hidden;
+  color: currentColor;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 360px) {
+  .sj-bottom-nav__shell {
+    border-radius: 999px;
+  }
+}

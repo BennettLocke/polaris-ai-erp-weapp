@@ -1,0 +1,27 @@
+<view class="sj-bottom-nav">
+  <view class="sj-bottom-nav__shell">
+    <view
+      wx:for="{{list}}"
+      wx:key="value"
+      class="sj-bottom-nav__item {{selectedPath === item.pagePath ? 'is-active' : ''}}"
+      data-path="{{item.pagePath}}"
+      bindtap="switchTab"
+    >
+      <view class="sj-bottom-nav__icon-wrap">
+        <image
+          wx:if="{{item.iconPath}}"
+          class="sj-bottom-nav__icon sj-bottom-nav__icon--normal {{selectedPath === item.pagePath ? 'is-hidden' : 'is-visible'}}"
+          src="{{item.iconPath}}"
+          mode="aspectFit"
+        />
+        <image
+          wx:if="{{item.selectedIconPath}}"
+          class="sj-bottom-nav__icon sj-bottom-nav__icon--active {{selectedPath === item.pagePath ? 'is-visible' : 'is-hidden'}}"
+          src="{{item.selectedIconPath}}"
+          mode="aspectFit"
+        />
+      </view>
+      <text class="sj-bottom-nav__label">{{item.text}}</text>
+    </view>
+  </view>
+</view>

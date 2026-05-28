@@ -1,0 +1,71 @@
+page {
+  min-height: 100%;
+  background: #f6f6f3;
+  color: #242424;
+  font-size: 28rpx;
+}
+
+view,
+text,
+button,
+input {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  border-radius: 8rpx;
+}
+
+button::after {
+  border: none;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+.section {
+  margin-bottom: 24rpx;
+}
+
+.panel {
+  background: #fff;
+  border: 1rpx solid #ece7df;
+  border-radius: 8rpx;
+}
+
+.muted {
+  color: #737373;
+}
+
+.price {
+  color: #c9352b;
+  font-weight: 700;
+}
+
+.primary-btn {
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #c9352b;
+  color: #fff;
+  font-size: 30rpx;
+}
+
+.ghost-btn {
+  height: 72rpx;
+  line-height: 72rpx;
+  background: #fff;
+  color: #c9352b;
+  border: 1rpx solid #c9352b;
+  font-size: 28rpx;
+}
+
+.two-line {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

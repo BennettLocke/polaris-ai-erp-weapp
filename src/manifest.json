@@ -1,0 +1,24 @@
+{
+    "name" : "肆计包装",
+    "appid" : "__UNI__18A7DFD",
+    "description" : "肆计包装自有商城小程序",
+    "versionName" : "0.1.0",
+    "versionCode" : 10,
+    "transformPx" : false,
+    "mp-weixin" : {
+        "appid" : "wx5fb2a0f7e3207b29",
+        "setting" : {
+            "urlCheck" : true,
+            "es6" : true,
+            "minified" : true,
+            "ignoreDevUnusedFiles" : false,
+            "ignoreUploadUnusedFiles" : false
+        },
+        "usingComponents" : true,
+        "__usePrivacyCheck__" : true
+    },
+    "networkTimeout" : {
+        "request" : 10000,
+        "downloadFile" : 10000
+    }
+}
