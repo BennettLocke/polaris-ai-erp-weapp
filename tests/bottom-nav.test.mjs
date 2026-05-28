@@ -33,21 +33,22 @@ describe('custom bottom navigation', () => {
     assert.equal(existsSync(tabBarJsonUrl), true);
   });
 
-  it('uses the real ShopXO app-center-nav icons and switches native tab pages', () => {
+  it('uses local tabbar icons and switches native tab pages', () => {
     const iconUrls = [
-      '1774869699282797.png',
-      '1774869699200935.png',
-      '1774869699309568.png',
-      '1774869698249700.png',
-      '1774869699858406.png',
-      '1774869699328333.png',
-      '1774869699161830.png',
-      '1774869699255558.png',
+      '/static/tabbar/home.png',
+      '/static/tabbar/home-active.png',
+      '/static/tabbar/category.png',
+      '/static/tabbar/category-active.png',
+      '/static/tabbar/order.png',
+      '/static/tabbar/order-active.png',
+      '/static/tabbar/user.png',
+      '/static/tabbar/user-active.png',
     ];
 
-    iconUrls.forEach((fileName) => {
-      assert.match(tabBarJsSource, new RegExp(`https://img\\.513sjbz\\.com/static/upload/images/app_center_nav/2026/03/30/${fileName}`));
+    iconUrls.forEach((iconPath) => {
+      assert.match(tabBarJsSource, new RegExp(iconPath.replace(/\//g, '\\/')));
     });
+    assert.doesNotMatch(tabBarJsSource, /https?:\/\//);
 
     assert.match(tabBarJsSource, /pagePath:\s*'\/pages\/home\/index'/);
     assert.match(tabBarJsSource, /pagePath:\s*'\/pages\/category\/index'/);

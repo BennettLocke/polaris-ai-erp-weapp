@@ -15,12 +15,17 @@
 
 小程序不直连数据库，所有业务数据通过 sjagent 服务层读取：
 
-- 默认生产域名：`https://ai.513sjbz.com`
 - 统一配置文件：`src/config.js`
+- API 域名通过 `.env` 或构建环境变量注入，不在仓库中写死真实部署域名。
 - 产品/分类/首页接口：`src/api/products.js`、`src/api/categories.js`、`src/api/home.js`
 - 登录/客户/订单接口：`src/api/auth.js`、`src/api/customer.js`、`src/api/orders.js`、`src/api/sales-orders.js`
 
 本仓库不保存数据库账号密码，也不保存服务器私钥。数据库连接、身份绑定、上下架过滤和销量统计由 sjagent 后端负责。
+
+## 关联项目
+
+- 组件库来源：[BennettLocke/bennett-locke-ui](https://github.com/BennettLocke/bennett-locke-ui)
+- 主程序/服务层来源：[BennettLocke/polaris-erp-agent](https://github.com/BennettLocke/polaris-erp-agent)
 
 ## 页面结构
 
@@ -60,6 +65,7 @@ npm run build:mp-weixin
 ## 发布前注意
 
 - 微信小程序 AppID 在 `src/manifest.json`。
-- 小程序合法域名需要包含 `https://ai.513sjbz.com` 和图片域名 `https://img.513sjbz.com`。
+- 小程序合法域名需要在微信公众平台和构建环境中单独配置，不提交到本仓库。
+- 构建前按 `.env.example` 配置 `VITE_SJ_API_BASE_URL` 或对应环境的 API URL。
 - 分享图优先由页面 canvas 生成临时图；静态分享图只作为兜底资源保留在 `src/static/share/`。
 - `docs/`、`dist/`、`node_modules/`、`.tmp/`、本地环境文件和开发工具私有配置不提交。

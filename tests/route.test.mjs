@@ -47,7 +47,7 @@ describe('route helpers', () => {
     );
   });
 
-  it('shows the customer service failure detail from WeChat', () => {
+  it('does not call enterprise customer service before service settings are injected', () => {
     const shownToasts = [];
     let payload = null;
     const originalWx = globalThis.wx;
@@ -66,9 +66,9 @@ describe('route helpers', () => {
     };
 
     try {
-      assert.equal(openCustomerService(), true);
-      assert.equal(payload.corpId, 'ww32faf883416778d9');
-      assert.equal(shownToasts[0].title, 'openCustomerServiceChat:fail corpId is not bound');
+      assert.equal(openCustomerService(), false);
+      assert.equal(payload, null);
+      assert.equal(shownToasts[0].title, '当前环境不支持企业微信客服');
     } finally {
       globalThis.wx = originalWx;
       globalThis.uni = originalUni;
