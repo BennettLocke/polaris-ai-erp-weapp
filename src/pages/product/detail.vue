@@ -57,8 +57,8 @@
         <view v-if="detail.showDetailMedia" class="detail-card">
           <view class="detail-card__title">商品详情</view>
           <view v-if="detail.detailImages.length" class="detail-images">
-            <view v-for="image in detail.detailImages" :key="image" class="detail-image-wrap">
-              <image class="detail-image" :src="image" mode="widthFix" />
+            <view v-for="(image, index) in detail.detailImages" :key="image" class="detail-image-wrap">
+              <image class="detail-image" :src="image" mode="widthFix" @tap="previewDetailImage(index)" />
             </view>
           </view>
           <rich-text v-else-if="detail.contentWeb" :nodes="detail.contentWeb" />
@@ -341,6 +341,14 @@ export default {
           }, 80);
         });
       });
+    },
+    previewDetailImage(index = 0) {
+      const urls = (this.detail.detailImages || []).filter(Boolean);
+      const safeIndex = Math.max(0, Math.min(Number(index) || 0, urls.length - 1));
+      const current = urls[safeIndex];
+      if (!current || !urls.length) return;
+      if (typeof uni === 'undefined' || typeof uni.previewImage !== 'function') return;
+      uni.previewImage({ urls, current });
     },
     handleBottomAction(event) {
       const key = event && event.action && event.action.key;

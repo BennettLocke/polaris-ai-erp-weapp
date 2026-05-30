@@ -17,13 +17,14 @@
           :key="item + index"
           class="sj-product-gallery__slide"
         >
-          <image
-            class="sj-product-gallery__media"
-            :src="item"
-            :mode="imageMode"
-            @tap.stop="previewActiveImage"
-            @error="handleImageError(index)"
-          />
+          <view class="sj-product-gallery__slide-inner" @tap="previewImage(index)">
+            <image
+              class="sj-product-gallery__media"
+              :src="item"
+              :mode="imageMode"
+              @error="handleImageError(index)"
+            />
+          </view>
         </swiper-item>
       </swiper>
       <view v-else class="sj-product-gallery__placeholder">
@@ -161,9 +162,10 @@ export default {
     handleImageError(index) {
       if (index === this.activeIndex) this.imageFailed = true;
     },
-    previewActiveImage() {
-      const current = this.activeImage;
+    previewImage(index = this.activeIndex) {
       const urls = this.imageItems;
+      const safeIndex = Math.max(0, Math.min(Number(index) || 0, urls.length - 1));
+      const current = urls[safeIndex];
       if (!current || !urls.length) return;
       if (typeof uni === "undefined" || typeof uni.previewImage !== "function") return;
       uni.previewImage({ urls, current });
@@ -205,6 +207,7 @@ export default {
 
 .sj-product-gallery__swiper,
 .sj-product-gallery__slide,
+.sj-product-gallery__slide-inner,
 .sj-product-gallery__media,
 .sj-product-gallery__placeholder,
 .sj-product-gallery__loading {
@@ -213,7 +216,8 @@ export default {
 }
 
 .sj-product-gallery__swiper,
-.sj-product-gallery__slide {
+.sj-product-gallery__slide,
+.sj-product-gallery__slide-inner {
   width: 100%;
   height: 100%;
 }

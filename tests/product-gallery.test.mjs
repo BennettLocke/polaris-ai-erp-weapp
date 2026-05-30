@@ -13,10 +13,10 @@ describe('product gallery component', () => {
   });
 
   it('previews the active main image with the full gallery image list when tapped', () => {
-    assert.match(gallerySource, /@tap\.stop="previewActiveImage"/);
-    assert.match(gallerySource, /previewActiveImage\(\)/);
+    assert.match(gallerySource, /@tap="previewImage\(index\)"/);
+    assert.match(gallerySource, /previewImage\(index = this\.activeIndex\)/);
     assert.match(gallerySource, /uni\.previewImage\(\{\s*urls,\s*current/);
-    assert.match(gallerySource, /const current = this\.activeImage/);
+    assert.match(gallerySource, /const current = urls\[safeIndex\]/);
     assert.match(gallerySource, /const urls = this\.imageItems/);
   });
 

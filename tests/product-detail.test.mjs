@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 
 import { buildProductDetailPayload, normalizeProductDetail } from '../src/utils/product.js';
+
+const detailPageSource = readFileSync(new URL('../src/pages/product/detail.vue', import.meta.url), 'utf8');
 
 describe('product detail payload', () => {
   it('normalizes sjagent goods data for the detail page', () => {
@@ -273,5 +276,13 @@ describe('product detail payload', () => {
 
     assert.equal(flagOnly.modelUrl, '');
     assert.equal(flagOnly.hasModel, true);
+  });
+});
+
+describe('product detail page image preview', () => {
+  it('lets detail images open the miniapp image preview', () => {
+    assert.match(detailPageSource, /@tap="previewDetailImage\(index\)"/);
+    assert.match(detailPageSource, /previewDetailImage\(index = 0\)/);
+    assert.match(detailPageSource, /uni\.previewImage\(\{\s*urls,\s*current/);
   });
 });
