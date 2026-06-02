@@ -129,6 +129,14 @@ tests/                          Node 单元测试
 - 发布前运行 `npm run test:unit` 和 `npm run build:mp-weixin`。
 - 不提交真实域名、密钥、客服 ID 私密配置、`dist/`、`node_modules/`、`.tmp/`、`unpackage/`。
 
+### 版本发布
+
+这个仓库是小程序应用，不发布 npm 包。正式版本通过 Git tag 和 GitHub Release 管理，当前版本为 `0.1.0`。
+
+- 更新记录见 [CHANGELOG.md](./CHANGELOG.md)
+- 发布流程见 [docs/release_guide.md](./docs/release_guide.md)
+- `v0.1.0` 兼容 `polaris-erp-agent >= 0.1.0`
+
 ## English
 
 Polaris AI ERP WeApp is the mini-program frontend for **Polaris AI Agent**, built with **uni-app + Vue 3**. It is a lightweight customer entry point for product browsing, category navigation, product detail pages, order lookup, account binding, sales-order entry points, customer-service contact, and share posters.
@@ -156,3 +164,11 @@ npm run build:mp-weixin
 ```
 
 Set deployment values through `.env` or CI/build environment variables based on `.env.example`; do not hard-code production domains or customer-service identifiers in source code.
+
+### Releases
+
+This repository is a mini-program application, not an npm package. Versions are managed through Git tags and GitHub Releases. The current version is `0.1.0`.
+
+- Changelog: [CHANGELOG.md](./CHANGELOG.md)
+- Release guide: [docs/release_guide.md](./docs/release_guide.md)
+- `v0.1.0` is compatible with `polaris-erp-agent >= 0.1.0`
