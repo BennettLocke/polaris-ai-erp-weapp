@@ -219,7 +219,7 @@ export default {
       return this.codePosition === 'top';
     },
     title() {
-      return this.product.productName || this.product.title || this.product.name || (this.code ? `产品 ${this.code}` : '肆计包装产品');
+      return this.product.productName || this.product.title || this.product.name || (this.code ? `产品 ${this.code}` : '北极星智能体产品');
     },
     titleParts() {
       return splitTitleParts(this.title);

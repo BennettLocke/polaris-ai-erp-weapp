@@ -113,13 +113,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '肆计包装｜产品、订单与客户服务',
+      title: '北极星智能体｜产品、订单与客户服务',
       path: PAGE_ROUTES.my,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '肆计包装｜产品、订单与客户服务',
+      title: '北极星智能体｜产品、订单与客户服务',
       path: PAGE_ROUTES.my,
     });
   },

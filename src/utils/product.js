@@ -302,7 +302,7 @@ function productColorImages(raw = {}, mainImages = [], detailImages = [], specCo
 export function normalizeProduct(raw = {}, options = {}) {
   const id = raw.id || raw.goods_id || raw.product_id || '';
   const code = firstText(raw.product_code, raw.coding, raw.sku_no);
-  const name = firstText(raw.title, raw.name, raw.goods_name, code ? `产品 ${code}` : '肆计包装产品');
+  const name = firstText(raw.title, raw.name, raw.goods_name, code ? `产品 ${code}` : '北极星智能体产品');
   const categoryLookup = options.categoryLookup || categoryLookupFrom(options.categories || []);
   const categoryName = formatTextList(
     raw.product_category_names,
@@ -324,7 +324,7 @@ export function normalizeProduct(raw = {}, options = {}) {
     .filter(Boolean);
   const specCount = productSpecCount(raw, colorText);
   const specText = firstText(sizeLabel, raw.simple_desc, raw.piece_text);
-  const description = firstText(specText, categoryName, raw.tea_type, raw.bag_type, '肆计包装商品');
+  const description = firstText(specText, categoryName, raw.tea_type, raw.bag_type, '北极星智能体商品');
   const mainImages = uniqueImages([
     raw.main_images_list,
     raw.images,
@@ -405,12 +405,12 @@ export function buildProductDetailPayload(product = {}) {
   );
 
   return {
-    title: product.productName || product.title || product.name || '肆计包装产品',
+    title: product.productName || product.title || product.name || '北极星智能体产品',
     titleNeedsOpticalAlign: /^【/.test(product.productName || product.title || product.name || ''),
     categoryName: product.categoryName || '',
     categoryTags: splitTextList(product.categoryName || ''),
     colorSwatches: asArray(product.colorSwatches),
-    description: product.description || '肆计包装商品',
+    description: product.description || '北极星智能体商品',
     priceText: product.priceText || productPriceText(product),
     galleryImages,
     infoRows: paramRows,

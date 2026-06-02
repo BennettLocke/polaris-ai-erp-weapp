@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="panel contact-card">
-      <view class="brand">肆计包装</view>
+      <view class="brand">北极星智能体</view>
       <view class="muted">产品咨询与售后服务</view>
     </view>
 
@@ -48,13 +48,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '联系肆计包装',
+      title: '联系北极星智能体',
       path: PAGE_ROUTES.contact,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '联系肆计包装',
+      title: '联系北极星智能体',
       path: PAGE_ROUTES.contact,
     });
   },

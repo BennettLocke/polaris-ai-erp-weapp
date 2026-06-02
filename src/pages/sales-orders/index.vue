@@ -100,13 +100,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '肆计包装销售单查询',
+      title: '北极星智能体销售单查询',
       path: PAGE_ROUTES.salesOrders,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '肆计包装销售单查询',
+      title: '北极星智能体销售单查询',
       path: PAGE_ROUTES.salesOrders,
     });
   },

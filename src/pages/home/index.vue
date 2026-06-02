@@ -569,7 +569,7 @@ export default {
       return buildCategoryCoverUrl(rawCover || '/static/images/product-placeholder.png');
     },
     productTitle(product = {}) {
-      return product.productName || product.title || product.name || product.product_code || product.productCode || '肆计包装产品';
+      return product.productName || product.title || product.name || product.product_code || product.productCode || '北极星智能体产品';
     },
     productPack(product = {}) {
       return product.pieceText || product.piece_text || product.description || product.simple_desc || '茶礼盒包装';

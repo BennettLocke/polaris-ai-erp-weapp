@@ -278,7 +278,7 @@ export default {
         { label: '用户协议', description: '用户协议', action: 'agreement', icon: 'document' },
         { label: '隐私政策', description: '隐私政策', action: 'privacy', icon: 'document' },
         { label: '清理缓存', description: '清理缓存', action: 'clear-cache', icon: 'trash' },
-        { label: '当前版本', description: '肆计包装', value: this.version, action: 'version', icon: 'info', static: true },
+        { label: '当前版本', description: '北极星智能体', value: this.version, action: 'version', icon: 'info', static: true },
       ];
     },
   },

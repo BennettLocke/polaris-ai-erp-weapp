@@ -183,7 +183,7 @@ export default {
         this.normalizedUser.username,
         this.normalizedUser.mobile,
         this.normalizedUser.phone,
-        '肆计包装用户'
+        '北极星智能体用户'
       );
     },
     roleText() {

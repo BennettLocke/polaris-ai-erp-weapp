@@ -48,7 +48,7 @@ describe('miniapp production copy guidelines', () => {
     assert.match(settingsPage, /navigateToPage\(buildPolicyUrl\('privacy'\)\)/);
     assert.match(policies, /小程序不提供购物车、在线下单和微信支付功能/);
     assert.match(policies, /未登录用户或未绑定客户的账号默认不展示订单列表/);
-    assert.match(policies, /个人信息处理者为肆计包装/);
+    assert.match(policies, /个人信息处理者为北极星智能体/);
     assert.match(policies, /手机号授权凭证及微信返回的手机号信息/);
     assert.match(policies, /查询、复制、更正、补充、删除你的个人信息/);
     assert.doesNotMatch(myPage, /内容待完善/);

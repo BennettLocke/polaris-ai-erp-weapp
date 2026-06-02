@@ -166,13 +166,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '肆计包装订单查询',
+      title: '北极星智能体订单查询',
       path: PAGE_ROUTES.order,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '肆计包装订单查询',
+      title: '北极星智能体订单查询',
       path: PAGE_ROUTES.order,
     });
   },

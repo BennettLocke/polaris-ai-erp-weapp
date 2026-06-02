@@ -62,13 +62,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '肆计包装账号资料',
+      title: '北极星智能体账号资料',
       path: PAGE_ROUTES.profile,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '肆计包装账号资料',
+      title: '北极星智能体账号资料',
       path: PAGE_ROUTES.profile,
     });
   },

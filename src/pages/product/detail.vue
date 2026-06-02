@@ -211,7 +211,7 @@ export default {
   onShareAppMessage() {
     const path = buildProductDetailUrl(this.id || this.product.id);
     return buildShareOptions({
-      title: productShareTitle(this.product, '肆计包装产品'),
+      title: productShareTitle(this.product, '北极星智能体产品'),
       path,
       imageUrl: this.sharePosterImage || productShareImage(this.detail),
     });
@@ -219,7 +219,7 @@ export default {
   onShareTimeline() {
     const path = buildProductDetailUrl(this.id || this.product.id);
     return buildTimelineShareOptions({
-      title: productShareTitle(this.product, '肆计包装产品'),
+      title: productShareTitle(this.product, '北极星智能体产品'),
       path,
       imageUrl: this.sharePosterImage || productShareImage(this.detail),
     });
@@ -302,7 +302,7 @@ export default {
       ctx.fillRect(0, 248, PRODUCT_SHARE_WIDTH, 152);
       ctx.setFillStyle('#18181b');
       ctx.setFontSize(20);
-      ctx.fillText('肆计包装', 28, 382);
+      ctx.fillText('北极星智能体', 28, 382);
 
       if (code) {
         ctx.setFillStyle('#18181b');

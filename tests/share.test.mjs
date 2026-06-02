@@ -37,10 +37,10 @@ describe('miniapp sharing', () => {
   });
 
   it('builds safe share paths and default payloads', () => {
-    assert.equal(DEFAULT_SHARE_TITLE, '肆计包装·官方小程序');
+    assert.equal(DEFAULT_SHARE_TITLE, '北极星智能体·官方小程序');
     assert.equal(DEFAULT_SHARE_IMAGE, '/static/share/home-share-v2.png');
     assert.ok(existsSync(new URL('src/static/share/home-share-v2.png', root)), 'default share image should exist');
-    assert.equal(SEARCH_SHARE_TITLE, '肆计包装·你要的都在这');
+    assert.equal(SEARCH_SHARE_TITLE, '北极星智能体·你要的都在这');
     assert.equal(SEARCH_SHARE_IMAGE, '/static/share/search-share-v2.png');
     assert.ok(existsSync(new URL('src/static/share/search-share-v2.png', root)), 'search share image should exist');
     assert.equal(buildSharePath('pages/product/list', { keyword: '见喜 半斤', empty: '' }), '/pages/product/list?keyword=%E8%A7%81%E5%96%9C%20%E5%8D%8A%E6%96%A4');
@@ -57,7 +57,7 @@ describe('miniapp sharing', () => {
   });
 
   it('uses product title and image for product detail sharing', () => {
-    assert.equal(productShareTitle({ title: '【见喜】半斤' }), '【见喜】半斤｜肆计包装');
+    assert.equal(productShareTitle({ title: '【见喜】半斤' }), '【见喜】半斤｜北极星智能体');
     assert.equal(
       productShareImage({ galleryImages: ['https://img.513sjbz.com/a.jpg'], cover: 'https://img.513sjbz.com/b.jpg' }),
       'https://img.513sjbz.com/a.jpg'

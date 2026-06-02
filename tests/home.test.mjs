@@ -393,7 +393,5 @@ describe('home page layout', () => {
     assert.match(homePageSource, /<sj-loading-state[\s\S]*v-if="loading"/);
     assert.doesNotMatch(homePageSource, /showStartupSplash/);
     assert.doesNotMatch(homePageSource, /home-startup-/);
-    assert.doesNotMatch(homePageSource, /肆计·包装设计/);
-    assert.doesNotMatch(homePageSource, /专注于品质包装/);
   });
 });

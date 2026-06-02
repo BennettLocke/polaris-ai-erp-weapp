@@ -3,7 +3,7 @@
     {
       "path": "pages/home/index",
       "style": {
-        "navigationBarTitleText": "肆计包装",
+        "navigationBarTitleText": "北极星智能体",
         "navigationStyle": "custom",
         "enablePullDownRefresh": true
       }
@@ -122,7 +122,7 @@
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "肆计包装",
+    "navigationBarTitleText": "北极星智能体",
     "navigationBarBackgroundColor": "#ffffff",
     "backgroundColor": "#f6f6f3"
   }

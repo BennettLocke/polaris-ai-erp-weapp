@@ -19,8 +19,8 @@ export const API_BASE_URL = normalizeBaseUrl(
 export const TOKEN_STORAGE_KEY = 'sj_token';
 
 export const APP_CONFIG = {
-  name: '肆计包装',
-  description: '茶包装产品展示',
+  name: '北极星智能体',
+  description: 'AI ERP 小程序客户端',
   servicePhone: '',
   serviceWechat: '',
   address: '',

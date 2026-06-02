@@ -36,7 +36,7 @@ export default {
       return this.product.cover || this.product.images || this.fallbackImage;
     },
     title() {
-      return this.product.productName || this.product.title || this.product.name || '肆计包装产品';
+      return this.product.productName || this.product.title || this.product.name || '北极星智能体产品';
     },
     code() {
       return this.product.productCode || this.product.product_code || this.product.coding || this.product.sku_no || '';
@@ -45,7 +45,7 @@ export default {
       return this.product.categoryName || this.product.product_category_text || '';
     },
     description() {
-      return this.product.description || this.product.simple_desc || this.product.product_category_text || '肆计包装商品';
+      return this.product.description || this.product.simple_desc || this.product.product_category_text || '北极星智能体商品';
     },
     priceText() {
       return this.product.priceText || `¥${this.product.min_price || this.product.price || '0.00'}`;

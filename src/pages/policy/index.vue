@@ -53,14 +53,14 @@ export default {
   onShareAppMessage() {
     const path = buildPolicyUrl(this.type);
     return buildShareOptions({
-      title: `${this.policy.title}｜肆计包装`,
+      title: `${this.policy.title}｜北极星智能体`,
       path,
     });
   },
   onShareTimeline() {
     const path = buildPolicyUrl(this.type);
     return buildTimelineShareOptions({
-      title: `${this.policy.title}｜肆计包装`,
+      title: `${this.policy.title}｜北极星智能体`,
       path,
     });
   },

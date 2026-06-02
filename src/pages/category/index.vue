@@ -176,13 +176,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '肆计包装商品分类',
+      title: '北极星智能体商品分类',
       path: PAGE_ROUTES.category,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '肆计包装商品分类',
+      title: '北极星智能体商品分类',
       path: PAGE_ROUTES.category,
     });
   },

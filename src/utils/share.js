@@ -1,6 +1,6 @@
-export const DEFAULT_SHARE_TITLE = '肆计包装·官方小程序';
+export const DEFAULT_SHARE_TITLE = '北极星智能体·官方小程序';
 export const DEFAULT_SHARE_IMAGE = '/static/share/home-share-v2.png';
-export const SEARCH_SHARE_TITLE = '肆计包装·你要的都在这';
+export const SEARCH_SHARE_TITLE = '北极星智能体·你要的都在这';
 export const SEARCH_SHARE_IMAGE = '/static/share/search-share-v2.png';
 
 function cleanText(value) {
@@ -81,7 +81,7 @@ export function buildTimelineShareOptions(options = {}) {
   return query ? { title, query, imageUrl } : { title, imageUrl };
 }
 
-export function productShareTitle(product = {}, fallback = '肆计包装产品') {
+export function productShareTitle(product = {}, fallback = '北极星智能体产品') {
   const title = cleanText(
     product.productName
     || product.title
@@ -90,7 +90,7 @@ export function productShareTitle(product = {}, fallback = '肆计包装产品')
     || product.productCode
     || fallback
   );
-  return `${title}｜肆计包装`;
+  return `${title}｜北极星智能体`;
 }
 
 export function productShareImage(product = {}, fallback = DEFAULT_SHARE_IMAGE) {
