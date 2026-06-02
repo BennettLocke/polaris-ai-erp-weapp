@@ -12,6 +12,7 @@ import {
   normalizeOrderFlow,
   normalizeOrderStatus,
   sortWorkflowOrdersByProgress,
+  workflowOrderNo,
 } from '../src/utils/order.js';
 
 describe('workflow order status normalization', () => {
@@ -35,7 +36,19 @@ describe('workflow order status normalization', () => {
     assert.equal(normalizeOrderStatus({ status: 'completed' }).text, '已完成');
   });
 
-  it('hides completed workflow orders from the default production list and sorts by progress', () => {
+  it('uses one workflow order number for display and keyword lookup', () => {
+    assert.equal(workflowOrderNo({ orderNo: 'WF-20260531-8', product_name: '见喜半斤', id: 75 }), 'WF-20260531-8');
+    assert.equal(workflowOrderNo({ workflow_order_no: 'WO-513', code: 'CODE-513', id: 75 }), 'WO-513');
+    assert.equal(workflowOrderNo({ code: 'CODE-513', id: 75 }), 'CODE-513');
+    assert.equal(workflowOrderNo({ id: 75 }), '75');
+
+    const payload = normalizeOrderFlow({
+      workflows: [{ orderNo: 'WF-20260531-8', product_name: '见喜半斤', id: 75 }],
+    });
+    assert.equal(payload.workflows[0].orderNo, 'WF-20260531-8');
+  });
+
+  it('keeps completed workflow orders in the all tab and sorts by progress', () => {
     const payload = normalizeOrderFlow({
       workflows: [
         { id: 'done', status_text: '配送完成', created_at: '2026-05-25 09:00' },
@@ -47,7 +60,7 @@ describe('workflow order status normalization', () => {
     });
 
     const visible = sortWorkflowOrdersByProgress(filterWorkflowOrdersByStatus(payload.workflows, 'all'));
-    assert.deepEqual(visible.map((item) => item.id), ['ordered', 'make', 'delivery']);
+    assert.deepEqual(visible.map((item) => item.id), ['ordered', 'make', 'delivery', 'legacy-done', 'done']);
     assert.deepEqual(
       sortWorkflowOrdersByProgress(filterWorkflowOrdersByStatus(payload.workflows, 'pending_make')).map((item) => item.id),
       ['ordered', 'make'],

@@ -34,8 +34,9 @@
 
         <button
           :class="['sj-login-page__primary', loading ? 'is-loading' : '']"
-          open-type="getPhoneNumber"
+          :open-type="agreementChecked ? 'getPhoneNumber' : ''"
           :disabled="loading"
+          @tap="guardAgreementTap"
           @getphonenumber="handlePhoneLogin"
         >
           <view v-if="loading" class="sj-login-page__spinner"></view>
@@ -53,12 +54,13 @@
           </button>
         </view>
 
-        <view class="sj-login-page__agreement">
-          <text>登录即表示已阅读并同意</text>
+        <label class="sj-login-page__agreement" @tap="toggleAgreement">
+          <checkbox class="sj-login-page__agreement-checkbox" :checked="agreementChecked" color="#18181b" @tap.stop="toggleAgreement" />
+          <text>我已阅读并同意</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openAgreement">《用户协议》</text>
           <text>和</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openPrivacy">《隐私政策》</text>
-        </view>
+        </label>
       </view>
 
       <view v-else-if='currentMode === "account"' class="sj-login-page__panel">
@@ -93,12 +95,13 @@
           </button>
         </view>
 
-        <view class="sj-login-page__agreement">
-          <text>登录即表示已阅读并同意</text>
+        <label class="sj-login-page__agreement" @tap="toggleAgreement">
+          <checkbox class="sj-login-page__agreement-checkbox" :checked="agreementChecked" color="#18181b" @tap.stop="toggleAgreement" />
+          <text>我已阅读并同意</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openAgreement">《用户协议》</text>
           <text>和</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openPrivacy">《隐私政策》</text>
-        </view>
+        </label>
       </view>
 
       <view v-else-if='currentMode === "register"' class="sj-login-page__panel">
@@ -142,12 +145,13 @@
           </button>
         </view>
 
-        <view class="sj-login-page__agreement">
-          <text>注册即表示已阅读并同意</text>
+        <label class="sj-login-page__agreement" @tap="toggleAgreement">
+          <checkbox class="sj-login-page__agreement-checkbox" :checked="agreementChecked" color="#18181b" @tap.stop="toggleAgreement" />
+          <text>我已阅读并同意</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openAgreement">《用户协议》</text>
           <text>和</text>
           <text class="sj-login-page__agreement-link" @tap.stop="openPrivacy">《隐私政策》</text>
-        </view>
+        </label>
       </view>
     </scroll-view>
   </view>
@@ -186,6 +190,7 @@ export default {
         password: '',
         confirm_password: '',
       },
+      agreementChecked: false,
       registerError: '',
     };
   },
@@ -213,10 +218,12 @@ export default {
     },
     handlePhoneLogin(event) {
       if (this.loading) return;
+      if (!this.ensureAgreementAccepted()) return;
       this.$emit('phone-login', (event && event.detail) || {});
     },
     submitPasswordLogin() {
       if (this.loading) return;
+      if (!this.ensureAgreementAccepted()) return;
       this.$emit('password-login', {
         username: cleanText(this.username),
         password: this.password,
@@ -239,6 +246,7 @@ export default {
     },
     submitRegisterAccount() {
       if (this.loading) return;
+      if (!this.ensureAgreementAccepted()) return;
       const account = cleanText(this.registerForm.account);
       const displayName = cleanText(this.registerForm.display_name) || account;
       const password = String(this.registerForm.password || '');
@@ -269,6 +277,23 @@ export default {
     continueAsGuest() {
       if (this.loading) return;
       this.$emit('guest');
+    },
+    toggleAgreement() {
+      if (this.loading) return;
+      this.agreementChecked = !this.agreementChecked;
+      if (this.agreementChecked) this.registerError = '';
+    },
+    guardAgreementTap() {
+      if (!this.agreementChecked) this.ensureAgreementAccepted();
+    },
+    ensureAgreementAccepted() {
+      if (this.agreementChecked) return true;
+      const message = '请先勾选同意用户协议和隐私政策';
+      if (this.currentMode === 'register') this.registerError = message;
+      if (typeof uni !== 'undefined' && typeof uni.showToast === 'function') {
+        uni.showToast({ title: message, icon: 'none' });
+      }
+      return false;
     },
     openAgreement() {
       this.$emit('agreement');
@@ -483,6 +508,25 @@ export default {
   flex-wrap: wrap;
   gap: 4rpx;
   text-align: center;
+}
+
+.sj-login-page__agreement-checkbox {
+  flex: none;
+  margin-right: 2rpx;
+  transform: scale(0.72);
+  transform-origin: center;
+}
+
+.sj-login-page__agreement-checkbox :deep(.wx-checkbox-input) {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: 7rpx;
+  border-color: #d4d4d8;
+}
+
+.sj-login-page__agreement-checkbox :deep(.wx-checkbox-input.wx-checkbox-input-checked) {
+  border-color: #18181b;
+  background: #18181b;
 }
 
 .sj-login-page__agreement-link {

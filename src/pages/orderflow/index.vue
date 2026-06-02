@@ -88,6 +88,8 @@ import { canLoadOrdersByDefault, canRequestOrderList, getOrderPermissions, hasLi
 import { PAGE_ROUTES, syncCustomTabBar } from '../../utils/route';
 import { buildShareOptions, buildTimelineShareOptions, enablePageShare } from '../../utils/share.js';
 
+const ORDERFLOW_KEYWORD = 'sj_orderflow_keyword';
+
 function cleanText(value) {
   return String(value || '').trim();
 }
@@ -152,12 +154,12 @@ export default {
     },
   },
   onLoad() {
-    this.bootstrapOrders();
+    if (!this.applyStoredKeyword()) this.bootstrapOrders();
   },
   onShow() {
     enablePageShare();
     syncCustomTabBar(PAGE_ROUTES.order);
-    this.syncOrdersForPermission();
+    if (!this.applyStoredKeyword()) this.syncOrdersForPermission();
   },
   onPullDownRefresh() {
     this.reload().finally(() => uni.stopPullDownRefresh());
@@ -198,7 +200,19 @@ export default {
       this.clearOrders();
       return Promise.resolve();
     },
+    applyStoredKeyword() {
+      if (typeof uni === 'undefined' || typeof uni.getStorageSync !== 'function') return false;
+      const stored = cleanText(uni.getStorageSync(ORDERFLOW_KEYWORD));
+      if (!stored) return false;
+      if (typeof uni.removeStorageSync === 'function') {
+        uni.removeStorageSync(ORDERFLOW_KEYWORD);
+      }
+      this.keyword = stored;
+      this.activeStatus = 'all';
+      return this.reload();
+    },
     async syncOrdersForPermission() {
+      if (this.loading) return;
       const authState = await this.ensureAuthState();
       if (!canRequestOrderList({ authState, keyword: this.keyword })) {
         this.clearOrders();
@@ -229,7 +243,7 @@ export default {
           page: 1,
           page_size: 30,
           keyword,
-          status: this.activeStatus === 'all' ? '' : this.activeStatus,
+          status: this.activeStatus === 'all' ? 'all' : this.activeStatus,
         });
         const sourceWorkflows = data.workflows || data.workflow_orders || data.list || [];
         this.workflows = sortWorkflowOrdersByProgress(filterWorkflowOrdersByStatus(sourceWorkflows, this.activeStatus));

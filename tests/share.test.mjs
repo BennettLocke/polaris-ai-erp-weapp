@@ -59,8 +59,8 @@ describe('miniapp sharing', () => {
   it('uses product title and image for product detail sharing', () => {
     assert.equal(productShareTitle({ title: '【见喜】半斤' }), '【见喜】半斤｜肆计包装');
     assert.equal(
-      productShareImage({ galleryImages: ['https://assets.example.test/a.jpg'], cover: 'https://assets.example.test/b.jpg' }),
-      'https://assets.example.test/a.jpg'
+      productShareImage({ galleryImages: ['https://img.513sjbz.com/a.jpg'], cover: 'https://img.513sjbz.com/b.jpg' }),
+      'https://img.513sjbz.com/a.jpg'
     );
   });
 

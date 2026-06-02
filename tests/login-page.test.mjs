@@ -23,7 +23,7 @@ describe('miniapp login page integration', () => {
     assert.match(component, /currentMode === "phone"/);
     assert.match(component, /currentMode === "account"/);
     assert.match(component, /currentMode === "register"/);
-    assert.match(component, /open-type="getPhoneNumber"/);
+    assert.match(component, /:open-type="agreementChecked \? 'getPhoneNumber' : ''"/);
     assert.match(component, /@getphonenumber="handlePhoneLogin"/);
     assert.match(component, /sj-login-page__panel-note/);
     assert.match(component, /登录后自动匹配客户信息/);
@@ -31,7 +31,7 @@ describe('miniapp login page integration', () => {
     assert.doesNotMatch(component, /登录后可同步订单查询权限/);
     assert.doesNotMatch(component, /自动完成客户绑定/);
     assert.match(component, /sj-login-page__agreement/);
-    assert.match(component, /登录即表示已阅读并同意/);
+    assert.match(component, /我已阅读并同意/);
     assert.match(component, /《用户协议》/);
     assert.match(component, /《隐私政策》/);
     assert.match(component, /\$emit\(['"]agreement['"]/);
@@ -80,6 +80,16 @@ describe('miniapp login page integration', () => {
     assert.doesNotMatch(component, /mobile:\s*account/);
     assert.doesNotMatch(component, /phone:\s*account/);
     assert.match(component, /\.\.\.\(registerPhone \? \{ mobile: registerPhone, phone: registerPhone \} : \{\}\)/);
+  });
+
+  it('requires an explicit agreement checkbox before login and registration', () => {
+    assert.match(component, /sj-login-page__agreement-checkbox/);
+    assert.match(component, /agreementChecked:\s*false/);
+    assert.match(component, /toggleAgreement/);
+    assert.match(component, /ensureAgreementAccepted/);
+    assert.match(component, /:open-type="agreementChecked \? 'getPhoneNumber' : ''"/);
+    assert.match(component, /if \(!this\.ensureAgreementAccepted\(\)\) return/);
+    assert.match(component, /请先勾选同意用户协议和隐私政策/);
   });
 
   it('keeps padded login controls inside the phone width', () => {

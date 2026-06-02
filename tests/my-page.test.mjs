@@ -139,24 +139,35 @@ describe('miniapp my page integration', () => {
   });
 
   it('shows bound customer balance and recent workflow orders on the My page', () => {
+    const recentTapBlock = page.match(/handleRecentOrderTap\(item = \{\}\)\s*\{[\s\S]*?\n    \},/)?.[0] || '';
+
     assert.ok(existsSync(customerApiUrl));
     assert.match(customerApi, /getCustomerSummary/);
     assert.match(customerApi, /\/api\/mini\/customer\/summary/);
     assert.match(component, /customerSummary/);
+    assert.match(component, /import \{ workflowOrderNo \}/);
     assert.match(component, /showCustomerSummary/);
     assert.match(component, /sj-my-page__customer-card/);
     assert.match(component, /sj-my-page__balance/);
     assert.match(component, /sj-my-page__recent-order/);
     assert.match(component, /\$emit\(['"]recent-order-tap['"]/);
     assert.match(page, /import \{ getCustomerSummary \}/);
+    assert.match(page, /import \{ workflowOrderNo \}/);
     assert.match(page, /:customer-summary="customerSummary"/);
     assert.match(page, /@recent-order-tap="handleRecentOrderTap"/);
     assert.match(page, /loadCustomerSummary/);
     assert.match(page, /handleRecentOrderTap/);
-    assert.match(page, /PAGE_ROUTES\.salesOrders/);
+    assert.match(component, /recentOrderNo\(item\)/);
+    assert.match(component, /workflowOrderNo\(item\)/);
+    assert.match(recentTapBlock, /workflowOrderNo\(item\)/);
+    assert.match(recentTapBlock, /sj_orderflow_keyword/);
+    assert.match(recentTapBlock, /PAGE_ROUTES\.order/);
+    assert.doesNotMatch(recentTapBlock, /sj_sales_order_keyword/);
+    assert.doesNotMatch(recentTapBlock, /PAGE_ROUTES\.salesOrders/);
   });
 
   it('maps My page actions to the existing miniapp routes without duplicating tabbar UI', () => {
+    const ordersCase = page.match(/case ['"]orders['"]:[\s\S]*?break;/)?.[0] || '';
     const contactCase = page.match(/case ['"]contact['"]:[\s\S]*?break;/)?.[0] || '';
 
     assert.match(page, /PAGE_ROUTES\.salesOrders/);
@@ -164,8 +175,8 @@ describe('miniapp my page integration', () => {
     assert.match(page, /import\s*\{[\s\S]*openCustomerService[\s\S]*\}\s*from ['"]\.\.\/\.\.\/utils\/route['"]/);
     assert.match(page, /handleMyMenu/);
     assert.match(page, /case ['"]orders['"]/);
-    assert.match(page, /case ['"]orders['"]:[\s\S]*navigateToPage\(PAGE_ROUTES\.salesOrders\)/);
-    assert.doesNotMatch(page, /case ['"]orders['"]:[\s\S]*navigateToPage\(PAGE_ROUTES\.order\)/);
+    assert.match(ordersCase, /navigateToPage\(PAGE_ROUTES\.salesOrders\)/);
+    assert.doesNotMatch(ordersCase, /navigateToPage\(PAGE_ROUTES\.order\)/);
     assert.match(page, /case ['"]contact['"]/);
     assert.match(contactCase, /openCustomerService\(\)/);
     assert.doesNotMatch(contactCase, /navigateToPage\(PAGE_ROUTES\.contact\)/);

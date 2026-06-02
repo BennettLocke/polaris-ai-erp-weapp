@@ -265,7 +265,7 @@ import { buildProductDetailUrl, buildProductListUrl } from '../../utils/route';
 import { PAGE_ROUTES, navigateToPage, syncCustomTabBar } from '../../utils/route';
 import { buildShareOptions, buildTimelineShareOptions, DEFAULT_SHARE_IMAGE, DEFAULT_SHARE_TITLE, enablePageShare } from '../../utils/share.js';
 
-const FALLBACK_HERO = '/static/share/home-share-v2.png';
+const FALLBACK_HERO = 'https://img.513sjbz.com/static/upload/images/app_nav/2026/04/25/1777104334795209.jpg';
 const NAV_FADE_DISTANCE = 180;
 const PRIMARY_CODES = ['30', '18', '12', '06'];
 const SECONDARY_ENTRIES = [
@@ -274,7 +274,7 @@ const SECONDARY_ENTRIES = [
     code: '12',
     meta: '泡包装礼盒',
     categoryId: 16,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944780103886.png',
     names: ['6小盒礼盒', '六小盒礼盒', '6小盒', '六小盒'],
   },
   {
@@ -282,7 +282,7 @@ const SECONDARY_ENTRIES = [
     code: '06',
     meta: '泡包装礼盒',
     categoryId: 17,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944780932823.png',
     names: ['3小盒礼盒', '三小盒礼盒', '3小盒', '三小盒'],
   },
   {
@@ -290,7 +290,7 @@ const SECONDARY_ENTRIES = [
     code: '02',
     meta: '泡包装礼盒',
     categoryId: 22,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944780647287.png',
     names: ['2小盒礼盒', '二小盒礼盒', '2小盒', '二小盒', '2泡小盒', '二泡小盒'],
   },
   {
@@ -298,7 +298,7 @@ const SECONDARY_ENTRIES = [
     code: '20',
     meta: '泡包装礼盒',
     categoryId: 13,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944781448937.png',
     names: ['五格礼盒', '5格礼盒', '五格', '5格'],
   },
   {
@@ -306,7 +306,7 @@ const SECONDARY_ENTRIES = [
     code: '',
     meta: '半斤/三两',
     categoryId: 10,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944781371619.png',
     names: ['PVC礼盒', 'pvc礼盒'],
   },
   {
@@ -314,7 +314,7 @@ const SECONDARY_ENTRIES = [
     code: '',
     meta: '30斤/20斤/15斤',
     categoryId: 18,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/03/31/1774944781981285.png',
     names: ['快递纸箱', '纸箱'],
   },
 ];
@@ -322,49 +322,49 @@ const POUCH_ENTRIES = [
   {
     title: '大红袍泡袋',
     categoryId: 5,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111642101984.png',
     names: ['大红袍泡袋', '大红袍'],
   },
   {
     title: '肉桂泡袋',
     categoryId: 7,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111641688659.png',
     names: ['肉桂泡袋', '肉桂'],
   },
   {
     title: '水仙泡袋',
     categoryId: 6,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111641565406.png',
     names: ['水仙泡袋', '水仙'],
   },
   {
     title: '品种茶泡袋',
     categoryId: 19,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111639597204.png',
     names: ['品种茶袋', '品种茶泡袋', '品种茶'],
   },
   {
     title: '公版泡袋',
     categoryId: 9,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111640962454.png',
     names: ['公版泡袋', '公版'],
   },
   {
     title: '红茶泡袋',
     categoryId: 12,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111640138273.png',
     names: ['红茶泡袋', '红茶'],
   },
   {
     title: '空白泡袋',
     categoryId: 20,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111640892603.png',
     names: ['空白泡袋', '空白'],
   },
   {
     title: '宽版泡袋',
     categoryId: 21,
-    icon: '',
+    icon: 'https://img.513sjbz.com/static/upload/images/goods_category/2026/04/02/1775111640396699.png',
     names: ['宽版泡袋', '宽版'],
   },
 ];

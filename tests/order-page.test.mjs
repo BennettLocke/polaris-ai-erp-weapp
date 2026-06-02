@@ -132,6 +132,16 @@ describe('miniapp order page', () => {
     assert.doesNotMatch(orderComponent, /未登录或客户角色不会默认展示订单/);
   });
 
+  it('restores a workflow keyword passed from My page recent records', () => {
+    assert.match(orderPage, /ORDERFLOW_KEYWORD/);
+    assert.match(orderPage, /sj_orderflow_keyword/);
+    assert.match(orderPage, /applyStoredKeyword/);
+    assert.match(orderPage, /uni\.getStorageSync\(ORDERFLOW_KEYWORD\)/);
+    assert.match(orderPage, /uni\.removeStorageSync\(ORDERFLOW_KEYWORD\)/);
+    assert.match(orderPage, /this\.keyword = stored/);
+    assert.match(orderPage, /return this\.reload\(\)/);
+  });
+
   it('uses concise production order empty and edit copy', () => {
     assert.match(orderComponent, /搜索生产订单/);
     assert.match(orderComponent, /输入订单号、客户或产品名称/);

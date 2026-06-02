@@ -39,6 +39,7 @@ import {
   logout as authLogout,
   register as registerAccount,
 } from '../../stores/auth';
+import { workflowOrderNo } from '../../utils/order';
 import { PAGE_ROUTES, buildPolicyUrl, navigateToPage, openCustomerService, syncCustomTabBar } from '../../utils/route';
 import { buildShareOptions, buildTimelineShareOptions, enablePageShare } from '../../utils/share.js';
 
@@ -270,11 +271,11 @@ export default {
       }
     },
     handleRecentOrderTap(item = {}) {
-      const keyword = cleanText(item.order_no || item.product_name || item.customer_name);
+      const keyword = workflowOrderNo(item) || cleanText(item.product_name || item.customer_name);
       if (keyword && typeof uni !== 'undefined' && typeof uni.setStorageSync === 'function') {
-        uni.setStorageSync('sj_sales_order_keyword', keyword);
+        uni.setStorageSync('sj_orderflow_keyword', keyword);
       }
-      navigateToPage(PAGE_ROUTES.salesOrders);
+      navigateToPage(PAGE_ROUTES.order);
     },
     async handleLogout() {
       if (this.loginLoading) return;

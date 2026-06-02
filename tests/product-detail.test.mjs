@@ -21,8 +21,8 @@ describe('product detail payload', () => {
       unit_name: '个',
       piece_text: '1件16套',
       price: '30.00',
-      images: 'https://assets.example.test/order/20260516/13254671.jpg.png',
-      detail_image_urls: ['https://assets.example.test/order/20260516/detail.jpg'],
+      images: 'https://img.513sjbz.com/order/20260516/13254671.jpg.png',
+      detail_image_urls: ['https://img.513sjbz.com/order/20260516/detail.jpg'],
       base_data: [
         { name: '商品编号', value: 'SJ0534' },
         { name: '颜色', value: '透明' },
@@ -35,7 +35,7 @@ describe('product detail payload', () => {
 
     assert.equal(payload.title, '【SJ0534】DSC_5392-短泡袋');
     assert.equal(payload.priceText, '¥30');
-    assert.deepEqual(payload.galleryImages, ['https://assets.example.test/order/20260516/13254671.jpg.png']);
+    assert.deepEqual(payload.galleryImages, ['https://img.513sjbz.com/order/20260516/13254671.jpg.png']);
     assert.deepEqual(payload.infoRows, [
       { label: '编号', value: 'SJ0534' },
       { label: '分类', value: '短泡袋' },
@@ -57,7 +57,7 @@ describe('product detail payload', () => {
       { value: '#caa24c', isLight: false },
       { value: '#f06423', isLight: false },
     ]);
-    assert.deepEqual(payload.detailImages, ['https://assets.example.test/order/20260516/detail.jpg']);
+    assert.deepEqual(payload.detailImages, ['https://img.513sjbz.com/order/20260516/detail.jpg']);
     assert.equal(payload.showDetailMedia, true);
     assert.deepEqual(payload.bottomActions, [
       { text: '返回分类', variant: 'outline', key: 'category' },
@@ -74,18 +74,18 @@ describe('product detail payload', () => {
       color: '红色',
       available_colors: ['红色'],
       spec_count: 1,
-      images: 'https://assets.example.test/main.jpg',
+      images: 'https://img.513sjbz.com/main.jpg',
       photo: [
-        { images: 'https://assets.example.test/main.jpg' },
-        { images: 'https://assets.example.test/detail.jpg' },
+        { images: 'https://img.513sjbz.com/main.jpg' },
+        { images: 'https://img.513sjbz.com/detail.jpg' },
       ],
-      detail_image_urls: ['https://assets.example.test/detail.jpg'],
+      detail_image_urls: ['https://img.513sjbz.com/detail.jpg'],
       content_web: '<p>detail</p>',
     });
 
     const payload = buildProductDetailPayload(product);
 
-    assert.deepEqual(payload.galleryImages, ['https://assets.example.test/main.jpg']);
+    assert.deepEqual(payload.galleryImages, ['https://img.513sjbz.com/main.jpg']);
     assert.deepEqual(payload.detailImages, []);
     assert.equal(payload.contentWeb, '');
     assert.equal(payload.showDetailMedia, false);
@@ -149,22 +149,22 @@ describe('product detail payload', () => {
       id: 906,
       coding: 'SJ2001',
       title: '【锦程】二三两',
-      images: 'https://assets.example.test/main.jpg',
+      images: 'https://img.513sjbz.com/main.jpg',
       available_colors: ['红色', '黄色'],
-      color_image_urls: ['https://assets.example.test/red.jpg', 'https://assets.example.test/yellow.jpg'],
-      detail_image_urls: ['https://assets.example.test/detail-1.jpg', 'https://assets.example.test/detail-2.jpg'],
+      color_image_urls: ['https://img.513sjbz.com/red.jpg', 'https://img.513sjbz.com/yellow.jpg'],
+      detail_image_urls: ['https://img.513sjbz.com/detail-1.jpg', 'https://img.513sjbz.com/detail-2.jpg'],
     });
 
     const payload = buildProductDetailPayload(product);
 
     assert.deepEqual(payload.galleryImages, [
-      'https://assets.example.test/main.jpg',
-      'https://assets.example.test/red.jpg',
-      'https://assets.example.test/yellow.jpg',
+      'https://img.513sjbz.com/main.jpg',
+      'https://img.513sjbz.com/red.jpg',
+      'https://img.513sjbz.com/yellow.jpg',
     ]);
     assert.deepEqual(payload.detailImages, [
-      'https://assets.example.test/detail-1.jpg',
-      'https://assets.example.test/detail-2.jpg',
+      'https://img.513sjbz.com/detail-1.jpg',
+      'https://img.513sjbz.com/detail-2.jpg',
     ]);
   });
 
@@ -173,42 +173,42 @@ describe('product detail payload', () => {
       id: 909,
       coding: 'SJ1576',
       title: '【视界】六小盒',
-      images: 'https://assets.example.test/main.jpg',
+      images: 'https://img.513sjbz.com/main.jpg',
       color_text: '橙色 / 红色 / 蓝色',
       product_group_data: [
         {
           coding: 'SJ1576',
           color: '橙色',
-          images: 'https://assets.example.test/main.jpg',
-          spec_image_url: 'https://assets.example.test/orange.jpg',
+          images: 'https://img.513sjbz.com/main.jpg',
+          spec_image_url: 'https://img.513sjbz.com/orange.jpg',
         },
         {
           coding: 'SJ1577',
           color: '红色',
-          images: 'https://assets.example.test/main.jpg',
-          spec_image_url: 'https://assets.example.test/red.jpg',
+          images: 'https://img.513sjbz.com/main.jpg',
+          spec_image_url: 'https://img.513sjbz.com/red.jpg',
         },
         {
           coding: 'SJ1578',
           color: '蓝色',
-          images: 'https://assets.example.test/main.jpg',
-          spec_image_url: 'https://assets.example.test/blue.jpg',
+          images: 'https://img.513sjbz.com/main.jpg',
+          spec_image_url: 'https://img.513sjbz.com/blue.jpg',
         },
       ],
       detail_image_urls: [
-        'https://assets.example.test/detail-1.jpg',
-        'https://assets.example.test/detail-2.jpg',
-        'https://assets.example.test/detail-3.jpg',
+        'https://img.513sjbz.com/detail-1.jpg',
+        'https://img.513sjbz.com/detail-2.jpg',
+        'https://img.513sjbz.com/detail-3.jpg',
       ],
     });
 
     const payload = buildProductDetailPayload(product);
 
     assert.deepEqual(payload.galleryImages, [
-      'https://assets.example.test/main.jpg',
-      'https://assets.example.test/orange.jpg',
-      'https://assets.example.test/red.jpg',
-      'https://assets.example.test/blue.jpg',
+      'https://img.513sjbz.com/main.jpg',
+      'https://img.513sjbz.com/orange.jpg',
+      'https://img.513sjbz.com/red.jpg',
+      'https://img.513sjbz.com/blue.jpg',
     ]);
   });
 
@@ -217,19 +217,19 @@ describe('product detail payload', () => {
       id: 907,
       coding: 'SJ2002',
       title: '【锦程】二三两',
-      images: 'https://assets.example.test/main.jpg',
+      images: 'https://img.513sjbz.com/main.jpg',
       available_colors: ['红色', '黄色', '蓝色'],
       detail_image_urls: [
-        'https://assets.example.test/red.jpg',
-        'https://assets.example.test/yellow.jpg',
-        'https://assets.example.test/blue.jpg',
-        'https://assets.example.test/detail-extra.jpg',
+        'https://img.513sjbz.com/red.jpg',
+        'https://img.513sjbz.com/yellow.jpg',
+        'https://img.513sjbz.com/blue.jpg',
+        'https://img.513sjbz.com/detail-extra.jpg',
       ],
     });
 
     const payload = buildProductDetailPayload(product);
 
-    assert.deepEqual(payload.galleryImages, ['https://assets.example.test/main.jpg']);
+    assert.deepEqual(payload.galleryImages, ['https://img.513sjbz.com/main.jpg']);
   });
 
   it('marks white beige transparent light-gold and champagne-gold swatches as light', () => {
@@ -257,14 +257,14 @@ describe('product detail payload', () => {
       id: 910,
       coding: 'SJ3D',
       title: 'Model product',
-      model_url: 'https://assets.example.test/model/SJ3D.glb',
+      model_url: 'https://img.513sjbz.com/model/SJ3D.glb',
     });
 
     const payload = buildProductDetailPayload(product);
 
-    assert.equal(product.modelUrl, 'https://assets.example.test/model/SJ3D.glb');
+    assert.equal(product.modelUrl, 'https://img.513sjbz.com/model/SJ3D.glb');
     assert.equal(product.hasModel, true);
-    assert.equal(payload.modelUrl, 'https://assets.example.test/model/SJ3D.glb');
+    assert.equal(payload.modelUrl, 'https://img.513sjbz.com/model/SJ3D.glb');
     assert.equal(payload.hasModel, true);
     assert.equal(payload.modelBadgeText, '3D视图');
 

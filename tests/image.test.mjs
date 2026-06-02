@@ -9,41 +9,41 @@ const categoryProductCardSource = readFileSync(new URL('../src/components/SjCate
 describe('image url helpers', () => {
   it('builds square OSS thumbnails for category product covers', () => {
     assert.equal(
-      buildCategoryCoverUrl('https://assets.example.test/static/upload/images/goods/cover.png'),
-      'https://assets.example.test/static/upload/images/goods/cover.png?x-oss-process=image/resize,m_fill,w_480,h_480/quality,q_85/format,jpg'
+      buildCategoryCoverUrl('https://img.513sjbz.com/static/upload/images/goods/cover.png'),
+      'https://img.513sjbz.com/static/upload/images/goods/cover.png?x-oss-process=image/resize,m_fill,w_480,h_480/quality,q_85/format,jpg'
     );
   });
 
   it('builds wide OSS images for homepage hero banners', () => {
     assert.equal(
-      buildHomeHeroUrl('https://assets.example.test/static/upload/images/app_nav/banner.jpg'),
-      'https://assets.example.test/static/upload/images/app_nav/banner.jpg?x-oss-process=image/resize,m_fill,w_1080,h_920/quality,q_85/format,jpg'
+      buildHomeHeroUrl('https://img.513sjbz.com/static/upload/images/app_nav/banner.jpg'),
+      'https://img.513sjbz.com/static/upload/images/app_nav/banner.jpg?x-oss-process=image/resize,m_fill,w_1080,h_920/quality,q_85/format,jpg'
     );
   });
 
   it('builds lightweight PNG OSS images for category icons', () => {
     assert.equal(
-      buildCategoryIconUrl('https://assets.example.test/static/upload/images/goods_category/icon.png'),
-      'https://assets.example.test/static/upload/images/goods_category/icon.png?x-oss-process=image/resize,w_240/quality,q_90/format,png'
+      buildCategoryIconUrl('https://img.513sjbz.com/static/upload/images/goods_category/icon.png'),
+      'https://img.513sjbz.com/static/upload/images/goods_category/icon.png?x-oss-process=image/resize,w_240/quality,q_90/format,png'
     );
   });
 
   it('detects jpeg category button sources even with query strings', () => {
-    assert.equal(isJpegImageUrl('https://assets.example.test/order/icon.jpg'), true);
-    assert.equal(isJpegImageUrl('https://assets.example.test/order/icon.jpeg?version=1'), true);
-    assert.equal(isJpegImageUrl('https://assets.example.test/order/icon.jpg.png'), false);
-    assert.equal(isJpegImageUrl('https://assets.example.test/order/icon.png'), false);
+    assert.equal(isJpegImageUrl('https://img.513sjbz.com/order/icon.jpg'), true);
+    assert.equal(isJpegImageUrl('https://img.513sjbz.com/order/icon.jpeg?version=1'), true);
+    assert.equal(isJpegImageUrl('https://img.513sjbz.com/order/icon.jpg.png'), false);
+    assert.equal(isJpegImageUrl('https://img.513sjbz.com/order/icon.png'), false);
   });
 
   it('preserves existing query strings and hash fragments when adding OSS processing', () => {
     assert.equal(
-      buildOssImageUrl('https://assets.example.test/a/b.jpg?version=1#preview', { width: 360, height: 360 }),
-      'https://assets.example.test/a/b.jpg?version=1&x-oss-process=image/resize,m_fill,w_360,h_360/quality,q_85/format,jpg#preview'
+      buildOssImageUrl('https://img.513sjbz.com/a/b.jpg?version=1#preview', { width: 360, height: 360 }),
+      'https://img.513sjbz.com/a/b.jpg?version=1&x-oss-process=image/resize,m_fill,w_360,h_360/quality,q_85/format,jpg#preview'
     );
   });
 
   it('does not double-append image processing or mutate local assets', () => {
-    const processed = 'https://assets.example.test/a/b.jpg?x-oss-process=image/resize,w_800';
+    const processed = 'https://img.513sjbz.com/a/b.jpg?x-oss-process=image/resize,w_800';
 
     assert.equal(buildCategoryCoverUrl(processed), processed);
     assert.equal(buildCategoryCoverUrl('/static/images/product-placeholder.png'), '/static/images/product-placeholder.png');

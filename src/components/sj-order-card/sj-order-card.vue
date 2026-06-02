@@ -143,7 +143,16 @@ export default {
       return { "--sj-order-card-scale": this.scale };
     },
     orderNo() {
-      return firstText(this.order.order_no, this.order.orderNo, this.order.workflow_no, this.order.code, this.order.id);
+      return firstText(
+        this.order.order_no,
+        this.order.orderNo,
+        this.order.workflow_no,
+        this.order.workflowOrderNo,
+        this.order.workflow_order_no,
+        this.order.no,
+        this.order.code,
+        this.order.id,
+      );
     },
     rawStatusKey() {
       return normalizeCardStatusKey(this.order.status_key || this.order.status?.key || this.order.status || this.order.stage || this.order.flow_status);

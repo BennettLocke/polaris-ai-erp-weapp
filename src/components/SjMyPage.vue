@@ -44,10 +44,10 @@
               <view v-else class="sj-my-page__recent-image sj-my-page__recent-image--empty">图</view>
               <view class="sj-my-page__recent-main">
                 <view class="sj-my-page__recent-line">
-                  <text class="sj-my-page__recent-name">{{ item.product_name || item.order_no }}</text>
+                  <text class="sj-my-page__recent-name">{{ recentOrderNo(item) || item.product_name }}</text>
                   <text class="sj-my-page__recent-status">{{ item.status_text }}</text>
                 </view>
-                <text class="sj-my-page__recent-meta">{{ item.color || '未填颜色' }} · {{ item.quantity_text || item.quantity }}</text>
+                <text class="sj-my-page__recent-meta">{{ recentOrderMeta(item) }}</text>
                 <text class="sj-my-page__recent-time">{{ item.time }}</text>
               </view>
             </button>
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import { workflowOrderNo } from '../utils/order.js';
+
 function cleanText(value) {
   return String(value || '').trim();
 }
@@ -252,6 +254,15 @@ export default {
     },
     handleMenuTap(item) {
       this.$emit('menu-tap', item);
+    },
+    recentOrderNo(item) {
+      return workflowOrderNo(item);
+    },
+    recentOrderMeta(item = {}) {
+      const product = firstText(item.product_name, item.goods_name, item.productSummary, item.product_summary);
+      const color = firstText(item.color, item.goods_color, item.color_text, '未填颜色');
+      const quantity = firstText(item.quantity_text, item.quantityText, item.quantity);
+      return [product, color, quantity].filter(Boolean).join(' · ');
     },
     emitRecentOrderTap(item) {
       this.$emit('recent-order-tap', item);

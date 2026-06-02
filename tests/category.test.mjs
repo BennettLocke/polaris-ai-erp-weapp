@@ -15,34 +15,34 @@ describe('category helpers', () => {
       {
         id: 2,
         name: '三两礼盒',
-        images: 'https://assets.example.test/category/box.jpg',
+        images: 'https://img.513sjbz.com/category/box.jpg',
         total: 21,
       },
       {
         id: 5,
         name: '大红袍泡袋',
-        icon: 'https://assets.example.test/category/bag.jpg',
+        icon: 'https://img.513sjbz.com/category/bag.jpg',
         total: 1,
       },
     ]);
 
     assert.equal(list.length, 2);
     assert.equal(list[0].name, '三两礼盒');
-    assert.equal(list[0].image, 'https://assets.example.test/category/box.jpg');
-    assert.equal(list[0].activeImage, 'https://assets.example.test/category/box.jpg');
+    assert.equal(list[0].image, 'https://img.513sjbz.com/category/box.jpg');
+    assert.equal(list[0].activeImage, 'https://img.513sjbz.com/category/box.jpg');
     assert.equal(list[0].initial, '三');
     assert.equal(list[0].total, 21);
-    assert.equal(list[1].image, 'https://assets.example.test/category/bag.jpg');
+    assert.equal(list[1].image, 'https://img.513sjbz.com/category/bag.jpg');
   });
 
   it('uses active category icon for selected side navigation state', () => {
     const item = {
-      icon: 'https://assets.example.test/category/normal.png',
-      icon_active: 'https://assets.example.test/category/active.png',
+      icon: 'https://img.513sjbz.com/category/normal.png',
+      icon_active: 'https://img.513sjbz.com/category/active.png',
     };
 
-    assert.equal(categoryImage(item), 'https://assets.example.test/category/normal.png');
-    assert.equal(categoryActiveImage(item), 'https://assets.example.test/category/active.png');
+    assert.equal(categoryImage(item), 'https://img.513sjbz.com/category/normal.png');
+    assert.equal(categoryActiveImage(item), 'https://img.513sjbz.com/category/active.png');
   });
 
   it('builds stable scroll anchor ids and image fallbacks', () => {

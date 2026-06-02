@@ -77,6 +77,19 @@ function firstText(...values) {
   return values.map(cleanText).find(Boolean) || '';
 }
 
+export function workflowOrderNo(order = {}) {
+  return firstText(
+    order.order_no,
+    order.orderNo,
+    order.workflow_no,
+    order.workflowOrderNo,
+    order.workflow_order_no,
+    order.no,
+    order.code,
+    order.id,
+  );
+}
+
 function firstNumber(...values) {
   const found = values.find((value) => value !== undefined && value !== null && value !== '');
   const number = Number(found);
@@ -180,7 +193,7 @@ export function filterWorkflowOrdersByStatus(orders = [], activeStatus = 'all') 
   const target = normalizeStatusKey(activeStatus);
   return asArray(orders).filter((order) => {
     const key = canonicalWorkflowStatusKey(order);
-    if (!target || target === 'all') return !['done', 'completed', 'delivered', 'canceled', 'deleted'].includes(key);
+    if (!target || target === 'all') return !['canceled', 'deleted'].includes(key);
     if (target === 'pending_make' || target === 'make_pending') {
       return ['ordered', 'pending', 'placed', 'created', 'pending_make', 'make_pending', 'waiting', 'processing', 'making'].includes(key);
     }
@@ -360,7 +373,7 @@ export function normalizeWorkflowOrder(raw = {}) {
     ...raw,
     type: ORDER_TYPES.WORKFLOW,
     id: raw.id || raw.order_id || raw.workflow_order_id || '',
-    orderNo: firstText(raw.order_no, raw.workflow_no, raw.no, raw.code),
+    orderNo: workflowOrderNo(raw),
     status_key: status.key,
     flow_status: status.key,
     title: productSummary,
