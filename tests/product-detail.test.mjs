@@ -285,4 +285,19 @@ describe('product detail page image preview', () => {
     assert.match(detailPageSource, /previewDetailImage\(index = 0\)/);
     assert.match(detailPageSource, /uni\.previewImage\(\{\s*urls,\s*current/);
   });
+
+  it('renders detail images in lazy batches instead of mounting every large image at once', () => {
+    assert.match(detailPageSource, /DETAIL_IMAGE_BATCH_SIZE/);
+    assert.match(detailPageSource, /visibleDetailImages\(/);
+    assert.match(detailPageSource, /v-for="\(image, index\) in visibleDetailImages"/);
+    assert.match(detailPageSource, /lazy-load/);
+    assert.match(detailPageSource, /onReachBottom\(\)/);
+    assert.match(detailPageSource, /loadMoreDetailImages\(/);
+  });
+
+  it('defers share poster generation so the first image paint has priority', () => {
+    assert.match(detailPageSource, /scheduleSharePoster\(/);
+    assert.match(detailPageSource, /clearSharePosterTimer\(/);
+    assert.match(detailPageSource, /setTimeout\(\(\) => this\.prepareSharePoster\(\)/);
+  });
 });

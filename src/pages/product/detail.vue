@@ -57,8 +57,14 @@
         <view v-if="detail.showDetailMedia" class="detail-card">
           <view class="detail-card__title">商品详情</view>
           <view v-if="detail.detailImages.length" class="detail-images">
-            <view v-for="(image, index) in detail.detailImages" :key="image" class="detail-image-wrap">
-              <image class="detail-image" :src="image" mode="widthFix" @tap="previewDetailImage(index)" />
+            <view v-for="(image, index) in visibleDetailImages" :key="image" class="detail-image-wrap">
+              <image
+                class="detail-image"
+                :src="image"
+                mode="widthFix"
+                lazy-load
+                @tap="previewDetailImage(index)"
+              />
             </view>
           </view>
           <rich-text v-else-if="detail.contentWeb" :nodes="detail.contentWeb" />
@@ -94,6 +100,8 @@ import { buildShareOptions, buildTimelineShareOptions, enablePageShare, productS
 const PRODUCT_SHARE_CANVAS_ID = 'productSharePosterCanvas';
 const PRODUCT_SHARE_WIDTH = 500;
 const PRODUCT_SHARE_HEIGHT = 400;
+const DETAIL_IMAGE_BATCH_SIZE = 2;
+const SHARE_POSTER_DELAY_MS = 700;
 
 function cleanText(value) {
   return String(value || '').trim();
@@ -186,6 +194,8 @@ export default {
       product: {},
       sharePosterImage: '',
       sharePosterTaskId: 0,
+      sharePosterTimer: null,
+      visibleDetailImageCount: DETAIL_IMAGE_BATCH_SIZE,
       loading: false,
       errorText: '',
     };
@@ -197,6 +207,9 @@ export default {
     detail() {
       return buildProductDetailPayload(this.product || {});
     },
+    visibleDetailImages() {
+      return (this.detail.detailImages || []).slice(0, this.visibleDetailImageCount);
+    },
   },
   onLoad(query) {
     this.id = query.id || query.goods_id || '';
@@ -207,6 +220,12 @@ export default {
   },
   onPullDownRefresh() {
     this.loadData().finally(() => uni.stopPullDownRefresh());
+  },
+  onReachBottom() {
+    this.loadMoreDetailImages();
+  },
+  onUnload() {
+    this.clearSharePosterTimer();
   },
   onShareAppMessage() {
     const path = buildProductDetailUrl(this.id || this.product.id);
@@ -235,9 +254,11 @@ export default {
       this.loading = true;
       this.errorText = '';
       this.sharePosterImage = '';
+      this.visibleDetailImageCount = DETAIL_IMAGE_BATCH_SIZE;
+      this.clearSharePosterTimer();
       try {
         this.product = await getProductDetail(this.id);
-        this.$nextTick(() => this.prepareSharePoster());
+        this.$nextTick(() => this.scheduleSharePoster());
       } catch (error) {
         this.product = {};
         this.sharePosterImage = '';
@@ -246,8 +267,23 @@ export default {
         this.loading = false;
       }
     },
+    loadMoreDetailImages() {
+      const total = (this.detail.detailImages || []).length;
+      if (!total || this.visibleDetailImageCount >= total) return;
+      this.visibleDetailImageCount = Math.min(total, this.visibleDetailImageCount + DETAIL_IMAGE_BATCH_SIZE);
+    },
+    clearSharePosterTimer() {
+      if (!this.sharePosterTimer) return;
+      clearTimeout(this.sharePosterTimer);
+      this.sharePosterTimer = null;
+    },
+    scheduleSharePoster() {
+      this.clearSharePosterTimer();
+      this.sharePosterTimer = setTimeout(() => this.prepareSharePoster(), SHARE_POSTER_DELAY_MS);
+    },
     async prepareSharePoster() {
       if (!this.ready) return;
+      this.clearSharePosterTimer();
       const taskId = ++this.sharePosterTaskId;
       const poster = await this.createProductSharePoster();
       if (taskId === this.sharePosterTaskId && poster) this.sharePosterImage = poster;

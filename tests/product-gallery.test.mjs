@@ -24,4 +24,12 @@ describe('product gallery component', () => {
     assert.match(gallerySource, /if \(this\.activeIndex <= 0\) return -1;/);
     assert.match(gallerySource, /return Math\.min\(this\.activeIndex - 1, this\.colorSwatches\.length - 1\);/);
   });
+
+  it('keeps all carousel images mounted while loading them through a queue', () => {
+    assert.match(gallerySource, /queuedImageSources\(/);
+    assert.match(gallerySource, /loadedImageIndexes/);
+    assert.match(gallerySource, /queueNextImage\(/);
+    assert.match(gallerySource, /@load="handleImageLoad\(index\)"/);
+    assert.match(gallerySource, /:src="queuedImageSources\[index\]"/);
+  });
 });

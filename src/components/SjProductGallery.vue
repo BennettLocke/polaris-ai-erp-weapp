@@ -20,8 +20,9 @@
           <view class="sj-product-gallery__slide-inner" @tap="previewImage(index)">
             <image
               class="sj-product-gallery__media"
-              :src="item"
+              :src="queuedImageSources[index]"
               :mode="imageMode"
+              @load="handleImageLoad(index)"
               @error="handleImageError(index)"
             />
           </view>
@@ -61,7 +62,7 @@
         :class="{ 'is-active': index === activeIndex }"
         @tap="selectImage(index)"
       >
-        <image class="sj-product-gallery__thumb-image" :src="item" mode="aspectFill" />
+        <image class="sj-product-gallery__thumb-image" :src="queuedImageSources[index]" mode="aspectFill" />
       </view>
     </scroll-view>
   </view>
@@ -96,11 +97,16 @@ export default {
     return {
       activeIndex: this.active,
       imageFailed: false,
+      queuedImageCount: 1,
+      loadedImageIndexes: {},
     };
   },
   computed: {
     imageItems() {
       return this.images.map(imageFromItem).filter(Boolean);
+    },
+    queuedImageSources() {
+      return this.imageItems.map((item, index) => (index < this.queuedImageCount ? item : ""));
     },
     activeImage() {
       return this.imageItems[this.activeIndex] || "";
@@ -145,9 +151,24 @@ export default {
     images() {
       if (this.activeIndex >= this.imageItems.length) this.activeIndex = 0;
       this.imageFailed = false;
+      this.resetImageQueue();
     },
   },
   methods: {
+    resetImageQueue() {
+      this.queuedImageCount = this.imageItems.length ? 1 : 0;
+      this.loadedImageIndexes = {};
+    },
+    queueNextImage(index) {
+      if (this.loadedImageIndexes[index]) return;
+      this.loadedImageIndexes = {
+        ...this.loadedImageIndexes,
+        [index]: true,
+      };
+      if (index >= this.queuedImageCount - 1 && this.queuedImageCount < this.imageItems.length) {
+        this.queuedImageCount += 1;
+      }
+    },
     selectImage(index) {
       this.activeIndex = index;
       this.imageFailed = false;
@@ -159,7 +180,11 @@ export default {
       this.imageFailed = false;
       this.$emit("change", { index, image: this.imageItems[index] });
     },
+    handleImageLoad(index) {
+      this.queueNextImage(index);
+    },
     handleImageError(index) {
+      this.queueNextImage(index);
       if (index === this.activeIndex) this.imageFailed = true;
     },
     previewImage(index = this.activeIndex) {
