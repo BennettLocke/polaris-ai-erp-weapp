@@ -97,6 +97,7 @@ function firstText(...values) {
 
 const MY_MENU_ICON_ASSETS = {
   order: '/static/icons/lucide/my-clipboard-list.svg',
+  footprint: '/static/icons/lucide/grid-2x2.svg',
   contact: '/static/icons/lucide/my-headset.svg',
   profile: '/static/icons/lucide/my-user-round.svg',
   settings: '/static/icons/lucide/my-settings.svg',
@@ -105,6 +106,7 @@ const MY_MENU_ICON_ASSETS = {
 function defaultMenuItems() {
   return [
     { label: '销售单', description: '历史开单记录', action: 'orders', icon: 'order' },
+    { label: '产品足迹', description: '已保存、最近浏览、常购商品', action: 'footprint', icon: 'footprint' },
     { label: '联系客服', description: '电话、微信、地址', action: 'contact', icon: 'contact' },
     { label: '账号资料', description: '身份与客户信息', action: 'profile', icon: 'profile' },
     { label: '设置', description: '账号与设置', action: 'settings', icon: 'settings' },
@@ -183,7 +185,7 @@ export default {
         this.normalizedUser.username,
         this.normalizedUser.mobile,
         this.normalizedUser.phone,
-        '北极星智能体用户'
+        '肆计包装用户'
       );
     },
     roleText() {

@@ -123,7 +123,7 @@ export default {
         this.normalizedUser.username,
         this.normalizedUser.mobile,
         this.normalizedUser.phone,
-        '北极星智能体用户'
+        '肆计包装用户'
       );
     },
     summaryText() {

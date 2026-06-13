@@ -253,12 +253,15 @@
       v-if="!loading && products.length === 0 && hotProducts.length === 0 && newProducts.length === 0 && featuredProducts.length === 0 && giftRecommendedProducts.length === 0 && pouchRecommendedProducts.length === 0 && pvcRecommendedProducts.length === 0"
       class="home-state muted"
     >暂无产品</view>
+
+    <sj-smart-select-fab @back-top="backToTop" />
   </view>
 </template>
 
 <script>
 import SjCategoryProductCard from '../../components/SjCategoryProductCard.vue';
 import SjLoadingState from '../../components/SjLoadingState.vue';
+import SjSmartSelectFab from '../../components/SjSmartSelectFab.vue';
 import { getHomeData } from '../../api/home';
 import { buildCategoryCoverUrl, buildCategoryIconUrl, buildHomeHeroUrl } from '../../utils/image';
 import { buildProductDetailUrl, buildProductListUrl } from '../../utils/route';
@@ -370,7 +373,7 @@ const POUCH_ENTRIES = [
 ];
 
 export default {
-  components: { SjCategoryProductCard, SjLoadingState },
+  components: { SjCategoryProductCard, SjLoadingState, SjSmartSelectFab },
   data() {
     return {
       loading: true,
@@ -569,7 +572,7 @@ export default {
       return buildCategoryCoverUrl(rawCover || '/static/images/product-placeholder.png');
     },
     productTitle(product = {}) {
-      return product.productName || product.title || product.name || product.product_code || product.productCode || '北极星智能体产品';
+      return product.productName || product.title || product.name || product.product_code || product.productCode || '肆计包装产品';
     },
     productPack(product = {}) {
       return product.pieceText || product.piece_text || product.description || product.simple_desc || '茶礼盒包装';
@@ -584,6 +587,11 @@ export default {
     },
     openSearch() {
       navigateToPage(PAGE_ROUTES.productList);
+    },
+    backToTop() {
+      if (typeof uni !== 'undefined' && typeof uni.pageScrollTo === 'function') {
+        uni.pageScrollTo({ scrollTop: 0, duration: 240 });
+      }
     },
     openCategory(item) {
       if (item && item.url) {

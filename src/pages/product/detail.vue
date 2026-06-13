@@ -75,7 +75,7 @@
       <sj-bottom-action-bar
         :title="detail.title"
         description="咨询报价与规格"
-        :actions="detail.bottomActions"
+        :actions="detailBottomActions"
         @action="handleBottomAction"
       />
     </block>
@@ -93,7 +93,9 @@ import SjBottomActionBar from '../../components/SjBottomActionBar.vue';
 import SjProductGallery from '../../components/SjProductGallery.vue';
 import SjProductParamList from '../../components/SjProductParamList.vue';
 import { getProductDetail } from '../../api/products';
+import { getAuthState } from '../../stores/auth';
 import { buildProductDetailPayload } from '../../utils/product.js';
+import { isProductFavorite, recordProductView, toggleProductFavorite } from '../../utils/product-footprint.js';
 import { PAGE_ROUTES, buildProductDetailUrl, navigateToPage, openCustomerService } from '../../utils/route';
 import { buildShareOptions, buildTimelineShareOptions, enablePageShare, productShareImage, productShareTitle } from '../../utils/share.js';
 
@@ -105,6 +107,14 @@ const SHARE_POSTER_DELAY_MS = 700;
 
 function cleanText(value) {
   return String(value || '').trim();
+}
+
+function authSnapshot() {
+  const state = getAuthState();
+  return {
+    token: state.token || '',
+    user: state.user || null,
+  };
 }
 
 function truncateText(value, maxLength) {
@@ -192,6 +202,8 @@ export default {
     return {
       id: '',
       product: {},
+      authState: authSnapshot(),
+      favoriteActive: false,
       sharePosterImage: '',
       sharePosterTaskId: 0,
       sharePosterTimer: null,
@@ -207,6 +219,17 @@ export default {
     detail() {
       return buildProductDetailPayload(this.product || {});
     },
+    detailBottomActions() {
+      return [
+        ...(this.detail.bottomActions || []).filter((item) => item && item.key !== 'contact'),
+        {
+          text: this.favoriteActive ? '已收藏' : '收藏',
+          variant: this.favoriteActive ? 'secondary' : 'outline',
+          key: 'favorite',
+        },
+        ...(this.detail.bottomActions || []).filter((item) => item && item.key === 'contact'),
+      ];
+    },
     visibleDetailImages() {
       return (this.detail.detailImages || []).slice(0, this.visibleDetailImageCount);
     },
@@ -217,6 +240,8 @@ export default {
   },
   onShow() {
     enablePageShare();
+    this.syncAuthState();
+    this.syncFavoriteState();
   },
   onPullDownRefresh() {
     this.loadData().finally(() => uni.stopPullDownRefresh());
@@ -230,7 +255,7 @@ export default {
   onShareAppMessage() {
     const path = buildProductDetailUrl(this.id || this.product.id);
     return buildShareOptions({
-      title: productShareTitle(this.product, '北极星智能体产品'),
+      title: productShareTitle(this.product, '肆计包装产品'),
       path,
       imageUrl: this.sharePosterImage || productShareImage(this.detail),
     });
@@ -238,7 +263,7 @@ export default {
   onShareTimeline() {
     const path = buildProductDetailUrl(this.id || this.product.id);
     return buildTimelineShareOptions({
-      title: productShareTitle(this.product, '北极星智能体产品'),
+      title: productShareTitle(this.product, '肆计包装产品'),
       path,
       imageUrl: this.sharePosterImage || productShareImage(this.detail),
     });
@@ -258,13 +283,39 @@ export default {
       this.clearSharePosterTimer();
       try {
         this.product = await getProductDetail(this.id);
+        this.syncAuthState();
+        this.recordCurrentProductView();
+        this.syncFavoriteState();
         this.$nextTick(() => this.scheduleSharePoster());
       } catch (error) {
         this.product = {};
+        this.favoriteActive = false;
         this.sharePosterImage = '';
         this.errorText = error.msg || '商品加载失败';
       } finally {
         this.loading = false;
+      }
+    },
+    syncAuthState() {
+      this.authState = authSnapshot();
+    },
+    recordCurrentProductView() {
+      if (!this.ready) return;
+      recordProductView(this.product, this.authState);
+    },
+    syncFavoriteState() {
+      if (!this.ready) {
+        this.favoriteActive = false;
+        return;
+      }
+      this.favoriteActive = isProductFavorite(this.product, this.authState);
+    },
+    toggleFavorite() {
+      if (!this.ready) return;
+      const result = toggleProductFavorite(this.product, this.authState);
+      this.favoriteActive = result.favorite;
+      if (typeof uni !== 'undefined' && typeof uni.showToast === 'function') {
+        uni.showToast({ title: result.favorite ? '已收藏' : '已取消收藏', icon: 'none' });
       }
     },
     loadMoreDetailImages() {
@@ -338,7 +389,7 @@ export default {
       ctx.fillRect(0, 248, PRODUCT_SHARE_WIDTH, 152);
       ctx.setFillStyle('#18181b');
       ctx.setFontSize(20);
-      ctx.fillText('北极星智能体', 28, 382);
+      ctx.fillText('肆计包装', 28, 382);
 
       if (code) {
         ctx.setFillStyle('#18181b');
@@ -392,8 +443,16 @@ export default {
         navigateToPage(PAGE_ROUTES.category);
         return;
       }
+      if (key === 'favorite') {
+        this.toggleFavorite();
+        return;
+      }
       if (key === 'contact') {
-        openCustomerService();
+        openCustomerService({
+          type: 'product',
+          product: this.product,
+          detail: this.detail,
+        });
       }
     },
   },

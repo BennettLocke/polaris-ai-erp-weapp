@@ -3,7 +3,7 @@
     {
       "path": "pages/home/index",
       "style": {
-        "navigationBarTitleText": "北极星智能体",
+        "navigationBarTitleText": "肆计包装",
         "navigationStyle": "custom",
         "enablePullDownRefresh": true
       }
@@ -80,9 +80,33 @@
       }
     },
     {
+      "path": "pages/product/smart-select",
+      "style": {
+        "navigationBarTitleText": "智能选品",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/product/smart-select-share",
+      "style": {
+        "navigationBarTitleText": "智能选品推荐",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "pages/product/detail",
       "style": {
         "navigationBarTitleText": "商品详情",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/product/footprint",
+      "style": {
+        "navigationBarTitleText": "产品足迹",
+        "navigationStyle": "custom",
         "enablePullDownRefresh": true
       }
     }
@@ -122,7 +146,7 @@
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "北极星智能体",
+    "navigationBarTitleText": "肆计包装",
     "navigationBarBackgroundColor": "#ffffff",
     "backgroundColor": "#f6f6f3"
   }

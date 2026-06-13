@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "北极星智能体产品展示与订单查询微信小程序",
+  "description": "肆计包装产品展示与订单查询微信小程序",
   "scripts": {
     "dev:h5": "uni",
     "dev:mp-weixin": "uni -p mp-weixin",

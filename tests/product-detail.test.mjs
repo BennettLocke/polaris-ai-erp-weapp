@@ -300,4 +300,12 @@ describe('product detail page image preview', () => {
     assert.match(detailPageSource, /clearSharePosterTimer\(/);
     assert.match(detailPageSource, /setTimeout\(\(\) => this\.prepareSharePoster\(\)/);
   });
+
+  it('passes the current product into customer service only from the detail contact action', () => {
+    const contactAction = detailPageSource.match(/if \(key === ['"]contact['"]\) \{[\s\S]*?\n      \}/)?.[0] || '';
+
+    assert.match(contactAction, /openCustomerService\(\{\s*type:\s*['"]product['"]/);
+    assert.match(contactAction, /product:\s*this\.product/);
+    assert.match(contactAction, /detail:\s*this\.detail/);
+  });
 });

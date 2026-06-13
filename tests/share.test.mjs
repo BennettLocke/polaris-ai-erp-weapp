@@ -13,6 +13,8 @@ import {
   productShareTitle,
   SEARCH_SHARE_IMAGE,
   SEARCH_SHARE_TITLE,
+  SMART_SELECTION_SHARE_IMAGE,
+  SMART_SELECTION_SHARE_TITLE,
 } from '../src/utils/share.js';
 
 const root = new URL('../', import.meta.url);
@@ -37,12 +39,15 @@ describe('miniapp sharing', () => {
   });
 
   it('builds safe share paths and default payloads', () => {
-    assert.equal(DEFAULT_SHARE_TITLE, '北极星智能体·官方小程序');
+    assert.equal(DEFAULT_SHARE_TITLE, '肆计包装·官方小程序');
     assert.equal(DEFAULT_SHARE_IMAGE, '/static/share/home-share-v2.png');
     assert.ok(existsSync(new URL('src/static/share/home-share-v2.png', root)), 'default share image should exist');
-    assert.equal(SEARCH_SHARE_TITLE, '北极星智能体·你要的都在这');
+    assert.equal(SEARCH_SHARE_TITLE, '肆计包装·你要的都在这');
     assert.equal(SEARCH_SHARE_IMAGE, '/static/share/search-share-v2.png');
     assert.ok(existsSync(new URL('src/static/share/search-share-v2.png', root)), 'search share image should exist');
+    assert.equal(SMART_SELECTION_SHARE_TITLE, '肆计包装·智能选品推荐');
+    assert.equal(SMART_SELECTION_SHARE_IMAGE, '/static/share/smart-select-share.png');
+    assert.ok(existsSync(new URL('src/static/share/smart-select-share.png', root)), 'smart selection share image should exist');
     assert.equal(buildSharePath('pages/product/list', { keyword: '见喜 半斤', empty: '' }), '/pages/product/list?keyword=%E8%A7%81%E5%96%9C%20%E5%8D%8A%E6%96%A4');
     assert.deepEqual(buildShareOptions({ title: '见喜', path: 'pages/product/detail?id=33', imageUrl: '' }), {
       title: '见喜',
@@ -57,7 +62,7 @@ describe('miniapp sharing', () => {
   });
 
   it('uses product title and image for product detail sharing', () => {
-    assert.equal(productShareTitle({ title: '【见喜】半斤' }), '【见喜】半斤｜北极星智能体');
+    assert.equal(productShareTitle({ title: '【见喜】半斤' }), '【见喜】半斤｜肆计包装');
     assert.equal(
       productShareImage({ galleryImages: ['https://img.513sjbz.com/a.jpg'], cover: 'https://img.513sjbz.com/b.jpg' }),
       'https://img.513sjbz.com/a.jpg'
@@ -75,6 +80,20 @@ describe('miniapp sharing', () => {
     assert.match(searchPage, /searchShareImage \|\| SEARCH_SHARE_IMAGE/);
     assert.match(detailPage, /productSharePosterCanvas/);
     assert.match(detailPage, /sharePosterImage \|\| productShareImage/);
+  });
+
+  it('uses a dedicated smart selection share poster and landing route', () => {
+    const smartPage = read('src/pages/product/smart-select.vue');
+    const smartSharePage = read('src/pages/product/smart-select-share.vue');
+
+    assert.match(smartPage, /smartSelectSharePosterCanvas/);
+    assert.match(smartPage, /SMART_SELECTION_SHARE_IMAGE/);
+    assert.match(smartPage, /SMART_SELECTION_SHARE_TITLE/);
+    assert.match(smartPage, /prepareSmartSelectSharePoster/);
+    assert.match(smartPage, /buildProductSmartSelectShareUrl/);
+    assert.match(smartPage, /smartSelectShareImage \|\| SMART_SELECTION_SHARE_IMAGE/);
+    assert.match(smartSharePage, /SMART_SELECTION_SHARE_IMAGE/);
+    assert.match(smartSharePage, /buildProductSmartSelectShareUrl/);
   });
 
   it('falls back to the original share image when no miniapp image API exists', async () => {

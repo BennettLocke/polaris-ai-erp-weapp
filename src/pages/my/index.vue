@@ -40,7 +40,7 @@ import {
   register as registerAccount,
 } from '../../stores/auth';
 import { workflowOrderNo } from '../../utils/order';
-import { PAGE_ROUTES, buildPolicyUrl, navigateToPage, openCustomerService, syncCustomTabBar } from '../../utils/route';
+import { PAGE_ROUTES, buildPolicyUrl, buildProductFootprintUrl, navigateToPage, openCustomerService, syncCustomTabBar } from '../../utils/route';
 import { buildShareOptions, buildTimelineShareOptions, enablePageShare } from '../../utils/share.js';
 
 function cleanText(value) {
@@ -113,13 +113,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '北极星智能体｜产品、订单与客户服务',
+      title: '肆计包装｜产品、订单与客户服务',
       path: PAGE_ROUTES.my,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '北极星智能体｜产品、订单与客户服务',
+      title: '肆计包装｜产品、订单与客户服务',
       path: PAGE_ROUTES.my,
     });
   },
@@ -256,6 +256,9 @@ export default {
       switch (item.action) {
         case 'orders':
           navigateToPage(PAGE_ROUTES.salesOrders);
+          break;
+        case 'footprint':
+          navigateToPage(buildProductFootprintUrl('favorites'));
           break;
         case 'contact':
           openCustomerService();

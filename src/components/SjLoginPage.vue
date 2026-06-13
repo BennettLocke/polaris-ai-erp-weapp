@@ -107,7 +107,7 @@
       <view v-else-if='currentMode === "register"' class="sj-login-page__panel">
         <view class="sj-login-page__panel-head">
           <text class="sj-login-page__panel-title">注册账号</text>
-          <text class="sj-login-page__panel-text">创建北极星智能体账号，后续可绑定手机号。</text>
+          <text class="sj-login-page__panel-text">创建肆计包装账号，后续可绑定手机号。</text>
         </view>
 
         <view class="sj-login-page__fields">
@@ -172,8 +172,8 @@ export default {
   emits: ['phone-login', 'password-login', 'register', 'guest', 'mode-change', 'agreement', 'privacy'],
   props: {
     navTitle: { type: String, default: '登录' },
-    brand: { type: String, default: '北极星智能体' },
-    title: { type: String, default: '登录北极星智能体账号' },
+    brand: { type: String, default: '肆计包装' },
+    title: { type: String, default: '登录肆计包装账号' },
     description: { type: String, default: '登录后查看销售单记录，继续浏览产品。' },
     mode: { type: String, default: 'phone' },
     loadingText: { type: String, default: '正在确认' },

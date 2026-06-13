@@ -86,6 +86,8 @@
         mode="aspectFit"
       />
     </view>
+
+    <sj-smart-select-fab @back-top="backToTop" />
   </view>
 </template>
 
@@ -93,6 +95,7 @@
 import SjCategoryProductCard from '../../components/SjCategoryProductCard.vue';
 import SjLoadingState from '../../components/SjLoadingState.vue';
 import SjSearchBar from '../../components/SjSearchBar.vue';
+import SjSmartSelectFab from '../../components/SjSmartSelectFab.vue';
 import { getCategories } from '../../api/categories';
 import { getProducts } from '../../api/products';
 import { buildCategoryIconUrl, isJpegImageUrl } from '../../utils/image';
@@ -100,7 +103,7 @@ import { PAGE_ROUTES, buildProductListUrl, navigateToPage, syncCustomTabBar } fr
 import { buildShareOptions, buildTimelineShareOptions, enablePageShare } from '../../utils/share.js';
 
 export default {
-  components: { SjCategoryProductCard, SjLoadingState, SjSearchBar },
+  components: { SjCategoryProductCard, SjLoadingState, SjSearchBar, SjSmartSelectFab },
   data() {
     return {
       loading: false,
@@ -176,13 +179,13 @@ export default {
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '北极星智能体商品分类',
+      title: '肆计包装商品分类',
       path: PAGE_ROUTES.category,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '北极星智能体商品分类',
+      title: '肆计包装商品分类',
       path: PAGE_ROUTES.category,
     });
   },
@@ -331,6 +334,12 @@ export default {
       return this.reloadProducts();
     },
     resetContentScroll() {
+      this.contentScrollTop = this.contentScrollTop === 0 ? 1 : 0;
+      this.$nextTick(() => {
+        this.contentScrollTop = 0;
+      });
+    },
+    backToTop() {
       this.contentScrollTop = this.contentScrollTop === 0 ? 1 : 0;
       this.$nextTick(() => {
         this.contentScrollTop = 0;

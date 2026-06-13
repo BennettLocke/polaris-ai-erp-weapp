@@ -17,7 +17,18 @@
 
     <scroll-view class="sj-order-page__body" scroll-y :show-scrollbar="false" :style="bodyStyle">
       <view class="sj-order-page__content">
-        <view class="sj-order-page__tabs">
+        <view v-if="showModeSwitch" class="sj-order-page__mode-switch">
+          <view
+            v-for="item in modeOptions"
+            :key="item.value"
+            :class="['sj-order-page__mode-option', activeMode === item.value ? 'is-active' : '']"
+            @tap="selectMode(item.value)"
+          >
+            <text>{{ item.label }}</text>
+          </view>
+        </view>
+
+        <view v-if="activeMode === 'orders'" class="sj-order-page__tabs">
           <view
             v-for="item in statusOptions"
             :key="item.value"
@@ -31,47 +42,53 @@
         </view>
 
         <view class="sj-order-page__panel">
-          <view v-if="shouldShowInitialEmpty" class="sj-order-page__empty">
-            <view class="sj-order-page__empty-inner">
-              <view class="sj-order-page__empty-mark">?</view>
-              <text class="sj-order-page__empty-title">搜索生产订单</text>
-              <text class="sj-order-page__empty-text">输入订单号、客户或产品名称</text>
+          <template v-if="activeMode === 'orders'">
+            <view v-if="shouldShowInitialEmpty" class="sj-order-page__empty">
+              <view class="sj-order-page__empty-inner">
+                <view class="sj-order-page__empty-mark">?</view>
+                <text class="sj-order-page__empty-title">搜索生产订单</text>
+                <text class="sj-order-page__empty-text">输入订单号、客户或产品名称</text>
+              </view>
             </view>
-          </view>
 
-          <view v-else-if="loading" class="sj-order-page__skeleton">
-            <view class="sj-order-page__skeleton-card"></view>
-            <view class="sj-order-page__skeleton-card"></view>
-          </view>
+            <view v-else-if="loading" class="sj-order-page__skeleton">
+              <view class="sj-order-page__skeleton-card"></view>
+              <view class="sj-order-page__skeleton-card"></view>
+            </view>
 
-          <view v-else-if="displayOrders.length" class="sj-order-page__panel">
-            <view class="sj-order-page__summary">
-              <text class="sj-order-page__title">{{ listTitle }}</text>
-              <text class="sj-order-page__count">{{ resultText }}</text>
+            <view v-else-if="displayOrders.length" class="sj-order-page__panel">
+              <view class="sj-order-page__summary">
+                <text class="sj-order-page__title">{{ listTitle }}</text>
+                <text class="sj-order-page__count">{{ resultText }}</text>
+              </view>
+              <view class="sj-order-page__list">
+                <sj-order-card
+                  v-for="item in displayOrders"
+                  :key="item.id || item.order_no || item.orderNo"
+                  :order="item"
+                  :can-edit="canEditOrders"
+                  @tap="emitOrderTap(item)"
+                  @detail="emitOrderTap(item)"
+                  @make-done="emitMakeDone(item)"
+                  @delivery-done="emitDeliveryDone(item)"
+                  @cancel-make="emitCancelMake(item)"
+                  @cancel-delivery="emitCancelDelivery(item)"
+                  @edit="emitEdit(item)"
+                />
+              </view>
             </view>
-            <view class="sj-order-page__list">
-              <sj-order-card
-                v-for="item in displayOrders"
-                :key="item.id || item.order_no || item.orderNo"
-                :order="item"
-                :can-edit="canEditOrders"
-                @tap="emitOrderTap(item)"
-                @detail="emitOrderTap(item)"
-                @make-done="emitMakeDone(item)"
-                @delivery-done="emitDeliveryDone(item)"
-                @cancel-make="emitCancelMake(item)"
-                @cancel-delivery="emitCancelDelivery(item)"
-                @edit="emitEdit(item)"
-              />
-            </view>
-          </view>
 
-          <view v-else class="sj-order-page__empty">
-            <view class="sj-order-page__empty-inner">
-              <view class="sj-order-page__empty-mark">0</view>
-              <text class="sj-order-page__empty-title">未找到订单</text>
-              <text class="sj-order-page__empty-text">换个关键词再试</text>
+            <view v-else class="sj-order-page__empty">
+              <view class="sj-order-page__empty-inner">
+                <view class="sj-order-page__empty-mark">0</view>
+                <text class="sj-order-page__empty-title">未找到订单</text>
+                <text class="sj-order-page__empty-text">换个关键词再试</text>
+              </view>
             </view>
+          </template>
+
+          <view v-else-if="activeMode === 'inventory'" class="sj-order-page__inventory-slot">
+            <slot name="inventory"></slot>
           </view>
         </view>
       </view>
@@ -108,7 +125,7 @@ const STATUS_ICON_ASSETS = {
 export default {
   name: "SjOrderPage",
   components: { SjOrderCard },
-  emits: ["search", "status-change", "order-tap", "make-done", "delivery-done", "cancel-make", "cancel-delivery", "edit", "refresh"],
+  emits: ["search", "status-change", "mode-change", "order-tap", "make-done", "delivery-done", "cancel-make", "cancel-delivery", "edit", "refresh"],
   props: {
     keyword: { type: String, default: "" },
     placeholder: { type: String, default: "搜索订单号、客户名称、商品名称" },
@@ -119,6 +136,11 @@ export default {
     total: { type: Number, default: 0 },
     listTitle: { type: String, default: "订单" },
     activeStatus: { type: String, default: "all" },
+    activeMode: { type: String, default: "orders" },
+    modeOptions: {
+      type: Array,
+      default: () => [],
+    },
     statusOptions: {
       type: Array,
       default: () => [
@@ -164,6 +186,9 @@ export default {
     navInputStyle() {
       const height = `${this.navLayout.height}px`;
       return { height, lineHeight: height };
+    },
+    showModeSwitch() {
+      return Array.isArray(this.modeOptions) && this.modeOptions.length > 1;
     },
     isInternalUser() {
       return ["employee", "staff", "admin", "manager"].includes(cleanText(this.role));
@@ -243,6 +268,12 @@ export default {
     },
     selectStatus(value) {
       this.$emit("status-change", value);
+    },
+    selectMode(value) {
+      const mode = cleanText(value) || "orders";
+      if (mode && mode !== this.activeMode) {
+        this.$emit("mode-change", mode);
+      }
     },
     statusIconSrc(item = {}) {
       const key = item.icon || item.value || "all";
@@ -347,6 +378,34 @@ export default {
   font-weight: 500;
 }
 
+.sj-order-page__mode-switch {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(24, 24, 27, 0.08);
+}
+
+.sj-order-page__mode-option {
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #71717a;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.sj-order-page__mode-option.is-active {
+  background: #18181b;
+  color: #ffffff;
+}
+
 .sj-order-page__tabs {
   display: flex;
   align-items: center;
@@ -413,7 +472,8 @@ export default {
 
 .sj-order-page__panel,
 .sj-order-page__list,
-.sj-order-page__skeleton {
+.sj-order-page__skeleton,
+.sj-order-page__inventory-slot {
   display: grid;
   gap: 12px;
 }

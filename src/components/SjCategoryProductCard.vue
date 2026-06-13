@@ -219,7 +219,7 @@ export default {
       return this.codePosition === 'top';
     },
     title() {
-      return this.product.productName || this.product.title || this.product.name || (this.code ? `产品 ${this.code}` : '北极星智能体产品');
+      return this.product.productName || this.product.title || this.product.name || (this.code ? `产品 ${this.code}` : '肆计包装产品');
     },
     titleParts() {
       return splitTitleParts(this.title);
@@ -371,6 +371,19 @@ export default {
   display: grid;
   gap: 6px;
   padding: 12px 12px 13px;
+}
+
+.sj-category-product-card__body-head {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.sj-category-product-card__top-badges-spacer {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .sj-category-product-card__title {

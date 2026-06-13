@@ -6,6 +6,7 @@ const root = new URL('../', import.meta.url);
 const orderPageUrl = new URL('src/pages/orderflow/index.vue', root);
 const cardComponentUrl = new URL('src/components/sj-order-card/sj-order-card.vue', root);
 const pageComponentUrl = new URL('src/components/sj-order-page/sj-order-page.vue', root);
+const inventoryCardUrl = new URL('src/components/sj-inventory-card/sj-inventory-card.vue', root);
 const pagesJsonUrl = new URL('src/pages.json', root);
 const lucideIconNames = [
   'grid-2x2',
@@ -21,6 +22,7 @@ const lucideIconNames = [
 const orderPage = existsSync(orderPageUrl) ? readFileSync(orderPageUrl, 'utf8') : '';
 const orderCard = existsSync(cardComponentUrl) ? readFileSync(cardComponentUrl, 'utf8') : '';
 const orderComponent = existsSync(pageComponentUrl) ? readFileSync(pageComponentUrl, 'utf8') : '';
+const inventoryCard = existsSync(inventoryCardUrl) ? readFileSync(inventoryCardUrl, 'utf8') : '';
 const pagesJson = existsSync(pagesJsonUrl) ? readFileSync(pagesJsonUrl, 'utf8') : '';
 
 describe('miniapp order page', () => {
@@ -28,7 +30,7 @@ describe('miniapp order page', () => {
     assert.ok(existsSync(cardComponentUrl));
     assert.ok(existsSync(pageComponentUrl));
     assert.match(orderPage, /import SjOrderPage/);
-    assert.match(orderPage, /components:\s*\{\s*SjOrderPage\s*\}/);
+    assert.match(orderPage, /components:\s*\{[^}]*SjOrderPage/);
     assert.match(orderPage, /<sj-order-page/);
     assert.match(orderPage, /class="orderflow-page"/);
     assert.match(orderPage, /<style scoped>/);
@@ -212,5 +214,56 @@ describe('miniapp order page', () => {
     assert.match(orderComponent, /\.sj-order-page__body\s*\{[\s\S]*height:\s*calc\(100vh - var\(--sj-order-page-nav-height,\s*105px\)\)/);
     assert.match(orderComponent, /\.sj-order-page__content\s*\{[\s\S]*padding:\s*24rpx 24rpx calc\(260rpx \+ env\(safe-area-inset-bottom\)\)/);
     assert.match(orderComponent, /\.sj-order-page__content\s*\{[\s\S]*box-sizing:\s*border-box/);
+  });
+
+  it('adds an internal-only inventory mode inside the order tab page', () => {
+    assert.match(orderPage, /import\s+\{\s*getMiniInventoryList\s*\}\s+from\s+'..\/..\/api\/inventory'/);
+    assert.match(orderPage, /import SjInventoryCard/);
+    assert.match(orderPage, /components:\s*\{\s*SjOrderPage,\s*SjInventoryCard\s*\}/);
+    assert.match(orderPage, /activeMode:\s*'orders'/);
+    assert.match(orderPage, /inventoryItems:\s*\[\]/);
+    assert.match(orderPage, /inventoryGroups:\s*\[\]/);
+    assert.match(orderPage, /canViewInventory\(\)/);
+    assert.match(orderPage, /orderModeOptions\(\)/);
+    assert.match(orderPage, /handleModeChange/);
+    assert.match(orderPage, /reloadInventory/);
+    assert.match(orderPage, /refreshCurrentView/);
+    assert.match(orderPage, /getMiniInventoryList/);
+    assert.match(orderPage, /<template #inventory>/);
+    assert.match(orderPage, /v-for="group in inventoryGroups"/);
+    assert.match(orderPage, /:group="group"/);
+    assert.match(orderPage, /this\.activeMode === 'inventory'/);
+    assert.match(orderPage, /:mode-options="orderModeOptions"/);
+    assert.match(orderPage, /:active-mode="activeMode"/);
+    assert.match(orderPage, /@mode-change="handleModeChange"/);
+    assert.doesNotMatch(orderPage, /this\.keyword\s*=\s*cleanText\(value\)[\s\S]*getMiniInventoryList/);
+  });
+
+  it('lets the shared order page render an optional order inventory switch and slot', () => {
+    assert.match(orderComponent, /modeOptions:\s*\{/);
+    assert.match(orderComponent, /activeMode:\s*\{/);
+    assert.match(orderComponent, /showModeSwitch\(\)/);
+    assert.match(orderComponent, /\$emit\("mode-change"/);
+    assert.match(orderComponent, /sj-order-page__mode-switch/);
+    assert.match(orderComponent, /sj-order-page__mode-option/);
+    assert.match(orderComponent, /v-if="showModeSwitch"/);
+    assert.match(orderComponent, /<slot name="inventory"><\/slot>/);
+    assert.match(orderComponent, /v-if="activeMode === 'orders'"/);
+    assert.match(orderComponent, /v-else-if="activeMode === 'inventory'"/);
+  });
+
+  it('has a readonly inventory matrix card for miniapp warehouse balances', () => {
+    assert.ok(existsSync(inventoryCardUrl));
+    assert.match(inventoryCard, /name:\s*"SjInventoryCard"/);
+    assert.match(inventoryCard, /props:\s*\{[\s\S]*group:/);
+    assert.match(inventoryCard, /inventoryTitle/);
+    assert.match(inventoryCard, /pieceText/);
+    assert.match(inventoryCard, /colorRows/);
+    assert.match(inventoryCard, /warehouseColumns/);
+    assert.match(inventoryCard, /rowWarehouseQty/);
+    assert.match(inventoryCard, /sj-inventory-card__matrix/);
+    assert.match(inventoryCard, /sj-inventory-card__stock-cell/);
+    assert.doesNotMatch(inventoryCard, /\$emit/);
+    assert.doesNotMatch(inventoryCard, /button/);
   });
 });

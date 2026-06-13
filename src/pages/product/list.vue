@@ -413,7 +413,7 @@ export default {
 
       ctx.setFillStyle('#18181b');
       ctx.setFontSize(28);
-      ctx.fillText('北极星智能体', 40, 122);
+      ctx.fillText('肆计包装', 40, 122);
       ctx.setFillStyle('#71717a');
       ctx.setFontSize(17);
       ctx.fillText('茶礼盒、泡袋与包装耗材', 40, 150);

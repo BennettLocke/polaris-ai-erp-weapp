@@ -1,24 +1,55 @@
 <template>
   <view class="orderflow-page">
     <sj-order-page
-      :keyword="keyword"
+      :keyword="currentKeyword"
       :role="orderRole"
       :orders="workflows"
-      :searched="searched"
-      :loading="loading"
+      :searched="currentSearched"
+      :loading="currentLoading"
       :total="total"
       :active-status="activeStatus"
+      :active-mode="activeMode"
+      :mode-options="orderModeOptions"
+      :placeholder="searchPlaceholder"
       list-title="订单"
       @search="handleSearch"
+      @mode-change="handleModeChange"
       @status-change="handleStatusChange"
-      @refresh="reload"
+      @refresh="refreshCurrentView"
       @order-tap="handleOrderTap"
       @make-done="handleMakeDone"
       @delivery-done="handleDeliveryDone"
       @cancel-make="handleCancelMake"
       @cancel-delivery="handleCancelDelivery"
       @edit="handleEdit"
-    />
+    >
+      <template #inventory>
+        <view v-if="inventoryLoading" class="orderflow-inventory__skeleton">
+          <view class="orderflow-inventory__skeleton-card"></view>
+          <view class="orderflow-inventory__skeleton-card"></view>
+          <view class="orderflow-inventory__skeleton-card"></view>
+        </view>
+
+        <view v-else-if="inventoryGroups.length" class="orderflow-inventory">
+          <view class="orderflow-inventory__summary">
+            <text class="orderflow-inventory__title">库存列表</text>
+            <text class="orderflow-inventory__count">{{ inventorySummary }}</text>
+          </view>
+          <sj-inventory-card
+            v-for="group in inventoryGroups"
+            :key="group.id || group.title"
+            :group="group"
+            :warehouses="inventoryWarehouses"
+          />
+        </view>
+
+        <view v-else class="orderflow-inventory__empty">
+          <view class="orderflow-inventory__empty-mark">{{ inventorySearched ? '0' : '?' }}</view>
+          <text class="orderflow-inventory__empty-title">{{ inventorySearched ? '未找到库存' : '搜索库存' }}</text>
+          <text class="orderflow-inventory__empty-text">输入商品编号、名称或颜色</text>
+        </view>
+      </template>
+    </sj-order-page>
 
     <view v-if="editingOrder" class="orderflow-editor">
       <view class="orderflow-editor__mask" @tap="closeEdit"></view>
@@ -73,7 +104,9 @@
 </template>
 
 <script>
+import { getMiniInventoryList } from '../../api/inventory';
 import { completeWorkflowOrderAction, getOrderFlow, saveWorkflowOrder } from '../../api/orders';
+import SjInventoryCard from '../../components/sj-inventory-card/sj-inventory-card.vue';
 import SjOrderPage from '../../components/sj-order-page/sj-order-page.vue';
 import { getAuthState, refreshCurrentUser } from '../../stores/auth';
 import {
@@ -129,15 +162,24 @@ function actionLoadingText(action) {
 }
 
 export default {
-  components: { SjOrderPage },
+  components: { SjOrderPage, SjInventoryCard },
   data() {
     return {
       loading: false,
+      activeMode: 'orders',
       keyword: '',
       activeStatus: 'all',
       searched: false,
       workflows: [],
       total: 0,
+      inventoryKeyword: '',
+      inventoryItems: [],
+      inventoryGroups: [],
+      inventoryWarehouses: [],
+      inventoryTotal: 0,
+      inventoryTotalQty: '0',
+      inventorySearched: false,
+      inventoryLoading: false,
       updatingOrderId: '',
       updatingAction: '',
       editingOrder: null,
@@ -152,6 +194,33 @@ export default {
       if (hasLinkedCustomer(getAuthState())) return 'customer';
       return 'guest';
     },
+    canViewInventory() {
+      return this.permissions.canEdit;
+    },
+    orderModeOptions() {
+      if (!this.canViewInventory) return [];
+      return [
+        { label: '订单', value: 'orders' },
+        { label: '库存', value: 'inventory' },
+      ];
+    },
+    currentKeyword() {
+      return this.activeMode === 'inventory' ? this.inventoryKeyword : this.keyword;
+    },
+    currentLoading() {
+      return this.activeMode === 'inventory' ? this.inventoryLoading : this.loading;
+    },
+    currentSearched() {
+      return this.activeMode === 'inventory' ? this.inventorySearched : this.searched;
+    },
+    searchPlaceholder() {
+      return this.activeMode === 'inventory' ? '搜索商品编号、名称、颜色' : '搜索订单号、客户名称、商品名称';
+    },
+    inventorySummary() {
+      const total = Number(this.inventoryTotal || this.inventoryGroups.length || this.inventoryItems.length || 0);
+      const qty = this.inventoryTotalQty || '0';
+      return total ? `${total} 款 · ${qty} 库存` : '';
+    },
   },
   onLoad() {
     if (!this.applyStoredKeyword()) this.bootstrapOrders();
@@ -159,26 +228,34 @@ export default {
   onShow() {
     enablePageShare();
     syncCustomTabBar(PAGE_ROUTES.order);
-    if (!this.applyStoredKeyword()) this.syncOrdersForPermission();
+    if (this.applyStoredKeyword()) return;
+    if (this.activeMode === 'inventory') {
+      this.reloadInventory();
+      return;
+    }
+    this.syncOrdersForPermission();
   },
   onPullDownRefresh() {
-    this.reload().finally(() => uni.stopPullDownRefresh());
+    this.refreshCurrentView().finally(() => uni.stopPullDownRefresh());
   },
   onShareAppMessage() {
     return buildShareOptions({
-      title: '北极星智能体订单查询',
+      title: '肆计包装订单查询',
       path: PAGE_ROUTES.order,
     });
   },
   onShareTimeline() {
     return buildTimelineShareOptions({
-      title: '北极星智能体订单查询',
+      title: '肆计包装订单查询',
       path: PAGE_ROUTES.order,
     });
   },
   methods: {
     updatePermissions() {
       this.permissions = getOrderPermissions(getAuthState());
+      if (!this.permissions.canEdit && this.activeMode === 'inventory') {
+        this.activeMode = 'orders';
+      }
     },
     async ensureAuthState() {
       const authState = getAuthState();
@@ -207,6 +284,7 @@ export default {
       if (typeof uni.removeStorageSync === 'function') {
         uni.removeStorageSync(ORDERFLOW_KEYWORD);
       }
+      this.activeMode = 'orders';
       this.keyword = stored;
       this.activeStatus = 'all';
       return this.reload();
@@ -225,6 +303,16 @@ export default {
     clearOrders() {
       this.workflows = [];
       this.total = 0;
+    },
+    clearInventory() {
+      this.inventoryItems = [];
+      this.inventoryGroups = [];
+      this.inventoryWarehouses = [];
+      this.inventoryTotal = 0;
+      this.inventoryTotalQty = '0';
+    },
+    refreshCurrentView() {
+      return this.activeMode === 'inventory' ? this.reloadInventory() : this.reload();
     },
     async reload() {
       const authState = await this.ensureAuthState();
@@ -257,8 +345,56 @@ export default {
       return Promise.resolve();
     },
     handleSearch(value) {
-      this.keyword = cleanText(value);
+      if (this.activeMode === 'inventory') {
+        this.inventoryKeyword = cleanText(value);
+        return this.reloadInventory();
+      }
+      const nextKeyword = cleanText(value);
+      this.keyword = nextKeyword;
       return this.reload();
+    },
+    async handleModeChange(value) {
+      const nextMode = value === 'inventory' ? 'inventory' : 'orders';
+      if (nextMode === 'inventory' && !this.canViewInventory) {
+        uni.showToast({ title: '当前账号不能查看库存', icon: 'none' });
+        return;
+      }
+      if (this.activeMode === nextMode) return;
+      this.activeMode = nextMode;
+      if (nextMode === 'inventory' && !this.inventoryGroups.length) {
+        await this.reloadInventory();
+      } else if (nextMode === 'orders') {
+        await this.syncOrdersForPermission();
+      }
+    },
+    async reloadInventory() {
+      await this.ensureAuthState();
+      if (!this.canViewInventory) {
+        this.clearInventory();
+        this.inventoryLoading = false;
+        return Promise.resolve();
+      }
+      const keyword = cleanText(this.inventoryKeyword);
+      this.inventorySearched = Boolean(keyword);
+      this.inventoryLoading = true;
+      try {
+        const data = await getMiniInventoryList({
+          page: 1,
+          page_size: 30,
+          keyword,
+        });
+        this.inventoryItems = data.items || [];
+        this.inventoryGroups = data.groups || [];
+        this.inventoryWarehouses = data.warehouses || [];
+        this.inventoryTotal = Number(data.total_items || this.inventoryGroups.length || this.inventoryItems.length || 0);
+        this.inventoryTotalQty = String(data.total_qty || '0');
+      } catch (error) {
+        this.clearInventory();
+        uni.showToast({ title: error.msg || '库存加载失败', icon: 'none' });
+      } finally {
+        this.inventoryLoading = false;
+      }
+      return Promise.resolve();
     },
     handleStatusChange(value) {
       this.activeStatus = value || 'all';
@@ -380,6 +516,89 @@ export default {
 .orderflow-page {
   min-height: 100vh;
   background: #f4f4f5;
+}
+
+.orderflow-inventory,
+.orderflow-inventory__skeleton {
+  display: grid;
+  gap: 12px;
+}
+
+.orderflow-inventory__summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 0;
+}
+
+.orderflow-inventory__title {
+  color: #18181b;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 800;
+}
+
+.orderflow-inventory__count {
+  color: #71717a;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.orderflow-inventory__empty {
+  box-sizing: border-box;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 48px 22px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(24, 24, 27, 0.08);
+  text-align: center;
+}
+
+.orderflow-inventory__empty-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #f4f4f5;
+  color: #71717a;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.orderflow-inventory__empty-title {
+  color: #18181b;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 800;
+}
+
+.orderflow-inventory__empty-text {
+  color: #71717a;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.orderflow-inventory__skeleton-card {
+  height: 148px;
+  border-radius: 14px;
+  background: linear-gradient(110deg, #ffffff 8%, #ececef 18%, #ffffff 33%);
+  background-size: 200% 100%;
+  box-shadow: 0 0 0 1px rgba(24, 24, 27, 0.08);
+  animation: orderflow-inventory-skeleton 1.15s ease-in-out infinite;
+}
+
+@keyframes orderflow-inventory-skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 
 .orderflow-editor {
